@@ -1,0 +1,9 @@
+#################
+## MyVera
+#################
+
+tmp/
+devices.json
+rooms.json
+protect/.htaccess
+resources/sass/.sass-cache
