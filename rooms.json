@@ -1,0 +1,14 @@
+{
+   "rooms":[
+      {
+         "name":"Aucune pièce",
+         "id":0,
+         "section":1
+      },
+      {
+         "name":"Chambre",
+         "id":1,
+         "section":1
+      }
+   ]
+}

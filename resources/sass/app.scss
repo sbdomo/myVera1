@@ -1,0 +1,82 @@
+//$base-color: #8bc531;
+//$base-color: #404040;
+
+$base-color: #4a4848;
+//$base-gradient: 'glossy';
+$active-color: #8bc531;
+$alert-color: #6ba00c;
+
+$tabs-bar-gradient: 'matte';
+$toolbar-gradient: 'glossy';
+
+
+@import 'sencha-touch/default/all';
+
+
+// You may remove any of the following modules that you
+// do not use in order to create a smaller css file.
+@include sencha-panel;
+@include sencha-buttons;
+@include sencha-sheet;
+@include sencha-picker;
+@include sencha-tabs;
+@include sencha-toolbar;
+@include sencha-toolbar-forms;
+@include sencha-indexbar;
+@include sencha-list;
+@include sencha-layout;
+@include sencha-carousel;
+@include sencha-form;
+@include sencha-msgbox;
+@include sencha-form-sliders;
+
+
+// Your custom code goes here...
+@include pictos-iconmask('home');
+.bg {
+	.x-body {
+		background-color: rgba(43,45,44, 0.2);
+	}
+}
+//define a variable so we can have consistant padding throughout the app
+$list-padding: .7em;
+//kitten list styling
+.device-list {
+    .x-dataview-inner {
+        padding: $list-padding;
+    }
+
+    //kitten list item styling
+    .device-list-item {
+        padding: $list-padding/2;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-bottom-width: 0;
+
+        //add rounded corners to the last item
+        &:last-child {
+            border-bottom-width: 1px;
+            @include border-bottom-radius($list-padding/2);
+        }
+    }
+
+    //add rounded corners to the first item
+    .x-mask + .device-list-item {
+        @include border-top-radius($list-padding/2);
+    }
+
+    .device-list-item .x-img {
+        background: #eee;
+        background-size: cover;
+        background-position: center center;
+
+        @include border-radius($list-padding/2);
+
+        width: 80px;
+        height: 80px;
+    }
+
+    .device-list-item .x-name {
+        padding: 0 $list-padding/2;
+    }
+}
