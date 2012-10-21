@@ -20,27 +20,37 @@ Ext.define('myvera.controller.Application', {
 	},
 	// called when the Application is launched, remove if not needed
 	launch: function(app) {
-				this.initViewport();
+		this.initViewport();
 	},
 	initViewport: function() {
 		Ext.Viewport.add(Ext.create('myvera.view.Main'));
-		Ext.getCmp('homepanel').getTabBar().hide();		
+		
+		// HomePanel creation
+		var homepanel = Ext.getCmp('homepanel');
+		homepanel.getTabBar().hide();
 		var orientation = Ext.Viewport.getOrientation();
-		if(orientation=="landscape") {
-			Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('carouselplan'));
+		if (orientation == "landscape") {
+			homepanel.setActiveItem(Ext.getCmp('carouselplan'));
 		} else {
-			Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('datalist'));
+			homepanel.setActiveItem(Ext.getCmp('datalist'));
 		}
-		Ext.Viewport.add(Ext.create('myvera.view.paneloverlay'));
-		Ext.getCmp('paneloverlay').hide();
+		
+		// PanelOverlay creation and hide
+		var paneloverlay = Ext.create('myvera.view.paneloverlay');
+		Ext.Viewport.add(paneloverlay);
+		paneloverlay.hide();
 	},
 	onOrientationchange: function(viewport, orientation, width, height) {
 		var homepanel = Ext.getCmp('homepanel');
-		console.log('orientationchange : ' + homepanel.id);		
-		if(orientation=="landscape") {
-			if(homepanel.getActiveItem().id=='datalist') homepanel.setActiveItem(Ext.getCmp('carouselplan'));
+		console.log('orientationchange : ' + homepanel.id);
+		if (orientation == "landscape") {
+			if (homepanel.getActiveItem().id == 'datalist') {
+				homepanel.setActiveItem(Ext.getCmp('carouselplan'));
+			}
 		} else {
-			if(homepanel.getActiveItem().id=='carouselplan') homepanel.setActiveItem(Ext.getCmp('datalist'));
+			if (homepanel.getActiveItem().id == 'carouselplan') {
+				homepanel.setActiveItem(Ext.getCmp('datalist'));
+			}
 		}
-	    }
+	}
 });

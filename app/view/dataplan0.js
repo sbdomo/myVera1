@@ -1,7 +1,7 @@
 Ext.define('myvera.view.dataplan0', {
 	extend: 'Ext.DataView',
 	xtype: 'dataplan0',
-	requires:['myvera.util.Templates'],
+	requires: ['myvera.util.Templates'],
 	stores: ['devicesStore'],
 	config: {
 		itemTpl: '<tpl if="etage==0">' + myvera.util.Templates.getTplplan() + '</tpl>',
