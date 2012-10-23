@@ -8,7 +8,7 @@ Ext.define('myvera.view.datalistoff', {
 		styleHtmlContent:true,
 		itemCls:'deviceview',		
 		disableSelection: true,
-		itemTpl:  '<tpl if="(verif==\'off\'&&(((category==4||category==120)&&tripped==0)||(category!=4&&category!=120&&status==0)))||(verif!=\'no\'&&(category==4||category==120)&&armed==0)"><div class="devicecadre">'+
+		itemTpl:  '<tpl if="(verif==\'off\'&&(((category==4||category==103||category==120)&&tripped==0)||(category!=4&&category!=103&&category!=120&&status==0)))||(verif!=\'no\'&&(category==4||category==103||category==120)&&armed==0)"><div class="devicecadre">'+
 		 myvera.util.Templates.getTpllist() +
 	        '</div></tpl>',
 		emptyText: 'Aucun module à surveiller éteint',

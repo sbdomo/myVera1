@@ -1,6 +1,6 @@
 Ext.define('myvera.store.devicesStore', {
     extend: 'Ext.data.Store',
-    requires:['myvera.store.storeRooms'],
+    requires: ['myvera.store.storeRooms'],
     config: {
             model: 'myvera.model.Veradevices',
 	    //give the store some fields
@@ -25,14 +25,13 @@ Ext.define('myvera.store.devicesStore', {
 	    ],
             grouper: {
                 groupFn: function(record) {
-			var roomname=record.get('room');
-			var roomsection="0"
-			if(Ext.getStore('Rooms').getById(record.get('room'))) {
-				roomname=Ext.getStore('Rooms').getById(record.get('room')).get('name');
-				roomsection=Ext.getStore('Rooms').getById(record.get('room')).get('section');
+			var roomname = record.get('room');
+			var roomsection = "0";
+			if (Ext.getStore('Rooms').getById(record.get('room'))) {
+				roomname = Ext.getStore('Rooms').getById(record.get('room')).get('name');
+				roomsection = Ext.getStore('Rooms').getById(record.get('room')).get('section');
 			}
-			
-			return '<div class="head'+ roomsection + '">' + roomname + '</div>';
+			return '<div class="head' + roomsection + '">' + roomname + '</div>';
 			//return '<div class="head'+ record.get('etage') + '">' + roomname + '</div>';
                 }
             },
@@ -52,7 +51,6 @@ Ext.define('myvera.store.devicesStore', {
 	    proxy: {
 		    type: 'ajax',
 		    url: './remote/index.php/device/JsonGetDevices/',
-		
 		    reader: {
 			    type: 'json',
 			    rootProperty: 'devices'

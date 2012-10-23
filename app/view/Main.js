@@ -3,7 +3,7 @@ Ext.define("myvera.view.Main", {
     id: 'main',
     alias: 'widget.main',
     requires: [
-        'Ext.TitleBar',
+        'Ext.TitleBar'
     ],
     config: {
 	fullscreen: true,

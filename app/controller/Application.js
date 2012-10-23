@@ -18,59 +18,63 @@ Ext.define('myvera.controller.Application', {
 				orientationchange: 'onOrientationchange'
 			},
 			'PanelConfigItems': {
-                disclose: 'showDetail'
-           },
-           'PanelConfigFloors': {
-                disclose: 'showDetail'
-            }
+				disclose: 'showDetail'
+			},
+			'PanelConfigFloors': {
+				disclose: 'showDetail'
+			}
 		}
 	},
 	// called when the Application is launched, remove if not needed
 	launch: function(app) {
 		this.initViewport();
-
 	},
 	initViewport: function() {
 		Ext.Viewport.add(Ext.create('myvera.view.Main'));
-		Ext.getCmp('homepanel').getTabBar().hide();
+		
+		// HomePanel creation
+		var homepanel = Ext.getCmp('homepanel');
+		homepanel.getTabBar().hide();
 		var orientation = Ext.Viewport.getOrientation();
-		if(orientation=="landscape") {
-			Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('carouselplan'));
+		if (orientation == "landscape") {
+			homepanel.setActiveItem(Ext.getCmp('carouselplan'));
 		} else {
-			Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('datalist'));
+			homepanel.setActiveItem(Ext.getCmp('datalist'));
 		}
-		Ext.Viewport.add(Ext.create('myvera.view.paneloverlay'));
-		Ext.getCmp('paneloverlay').hide();
+		
+		// PanelOverlay creation and hide
+		var paneloverlay = Ext.create('myvera.view.paneloverlay');
+		Ext.Viewport.add(paneloverlay);
+		paneloverlay.hide();
 	},
 	onOrientationchange: function(viewport, orientation, width, height) {
-		//var activeItem = viewport.getActiveItem().id;
-		
-		//var homepanel = viewport.getAt(0).getAt(0);
 		var homepanel = Ext.getCmp('homepanel');
-		//var carousel =Ext.get('carouselplan').getActiveItem().id;
 		console.log('orientationchange : ' + homepanel.id);		
-		if(orientation=="landscape") {
-			if(homepanel.getActiveItem().id=='datalist') homepanel.setActiveItem(Ext.getCmp('carouselplan'));
+		if (orientation == "landscape") {
+			if (homepanel.getActiveItem().id == 'datalist') {
+				homepanel.setActiveItem(Ext.getCmp('carouselplan'));
+			}
 		} else {
-			if(homepanel.getActiveItem().id=='carouselplan') homepanel.setActiveItem(Ext.getCmp('datalist'));
+			if (homepanel.getActiveItem().id == 'carouselplan') {
+				homepanel.setActiveItem(Ext.getCmp('datalist'));
+			}
 		}
-	   },
+	},
 	showDetail: function(list, record) {
-       if(list.id=="PanelConfigItems"){
-       	this.getMain().push({
-            xtype: 'PanelConfigItem',
-            title: 'Detail',
-            data: record.getData()
-        });
-       }else{
-       	Ext.getCmp('PanelConfigFloorsNavigation').push({
-            xtype: 'PanelConfigFloor',
-            title: 'Detail',
-            data: record.getData()
-        });
-       }
-        
-       // PanelConfigItem.setRecord(record);
-   }
-   
+		if(list.id=="PanelConfigItems"){
+			this.getMain().push({
+					xtype: 'PanelConfigItem',
+					title: 'Detail',
+					data: record.getData()
+			});
+		}else{
+			Ext.getCmp('PanelConfigFloorsNavigation').push({
+					xtype: 'PanelConfigFloor',
+					title: 'Detail',
+					data: record.getData()
+			});
+		}
+		
+		// PanelConfigItem.setRecord(record);
+	}
 });

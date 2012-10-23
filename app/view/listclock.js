@@ -8,7 +8,7 @@ Ext.define('myvera.view.listclock', {
 		styleHtmlContent:true,
 		itemCls:'deviceview',
 		disableSelection: true,
-		itemTpl:  '<tpl if="category==120"><div class="devicecadre">'+
+		itemTpl:  '<tpl if="category==120||category==103"><div class="devicecadre">'+
 		 myvera.util.Templates.getTpllist() +
 	        '</div></tpl>',
 		emptyText: 'Aucun réveil',
