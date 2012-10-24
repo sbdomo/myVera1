@@ -9,27 +9,29 @@ Ext.define("myvera.view.Main", {
 		fullscreen: true,
 		tabBarPosition: 'bottom',
 		items: [
-			{
-				xtype: 'homepanel',
-				title: ' Tableau de bord ',
-				iconCls: 'home'
-			},
-			{
-				xtype: 'panelinfo',
-				title: 'Allumés ?',
-				iconCls: 'info'
-			},
-			{
-				xtype: 'listclock',
-				title: 'Réveils',
-				iconCls: 'time'
-			},
-			{
-				xtype: 'PanelConfig',
-				title: 'Config.',
-				iconCls: 'user',
-				layout: 'vbox'
-			}
+		{
+			xtype: 'homepanel',
+			title: ' Tableau de bord ',
+			iconCls: 'home',
+			hidden: true
+		},
+		{
+			xtype: 'panelinfo',
+			title: 'Allumés ?',
+			iconCls: 'info',
+			hidden: true
+		},
+		{
+			xtype: 'listclock',
+			title: 'Réveils',
+			iconCls: 'time',
+			hidden: true
+		},
+		{
+			xtype: 'PanelConfig',
+			title: 'Config.',
+			iconCls: 'user'
+		}
 		]
 	}
 });

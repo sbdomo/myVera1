@@ -3,6 +3,7 @@ Ext.define('myvera.model.CurrentUser', {
 	config: {
 		fields: [
 			{name: 'id', type: 'int'},
+			{name: 'ipvera', type: 'string'},
 			{name: 'name', type: 'string'},
 			{name: 'pass', type: 'string'},
 		],

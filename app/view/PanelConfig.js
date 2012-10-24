@@ -2,32 +2,46 @@ Ext.define('myvera.view.PanelConfig', {
 	extend: 'Ext.form.Panel',
 	xtype: 'PanelConfig',
 	id:'PanelConfig',
-	requires: ['Ext.field.Password','Ext.form.FieldSet', 'Ext.field.Toggle'],
+	requires: ['Ext.field.Hidden', 'Ext.field.Password', 'Ext.field.Toggle'],
 	config: {
 		items: [
-			{
+		{
 			xtype: 'fieldset',
-			iconCls: 'home',
+			title: 'Connexion locale',
+			//iconCls: 'home',
+			//instructions: 'Connexion locale',
 			items: [
-				{
-					xtype: 'textfield',
-					name: 'username',
-					autoCapitalize: false,
-					placeHolder: 'Nom'
-				},
-				{
-					xtype: 'passwordfield',
-					name: 'password',
-					placeHolder: 'Mot de passe'
-				},
-				{
-					xtype: 'button',
-					text: 'S\'identifier',
-					name: 'logbt',
-					ui: 'confirm'
-				}
-				]
+			{
+				xtype: 'hiddenfield',
+				value:'0',
+				name: 'connexion'
+			},
+			{
+				xtype: 'textfield',
+				name: 'login',
+				autoCapitalize: false,
+				placeHolder: 'Nom'
+			},
+			{
+				xtype: 'passwordfield',
+				name: 'pass',
+				placeHolder: 'Mot de passe'
+			},
+			{
+				xtype: 'textfield',
+				label: 'IP de la Vera',
+				id: 'ipvera',
+				name: 'ipvera',
+				placeHolder: 'Exemple: 192.168.0.1',
+			},
+			{
+				xtype: 'button',
+				text: 'S\'identifier',
+				name: 'loginbutton',
+				ui: 'confirm'
 			}
+			]
+		}
 		]
 	}
 });

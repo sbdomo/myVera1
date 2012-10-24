@@ -2,8 +2,9 @@
 header('Content-Type: text/html; charset=utf-8');
 
 // Load config
-include "param.php";
-
+//include "param.php";
+$ipvera=$_GET["ipvera"];
+$vera = 'http://'.$ipvera.':3480';
 $id=$_GET["id"];
 
 //read json an vera

@@ -15,10 +15,12 @@ Ext.define('myvera.controller.contdevices', {
 			listeoff: 'datalistoff',
 			listclock: 'listclock',
 			
-			usernameCt: 'PanelConfig [name=username]',
-			passwordCt: 'PanelConfig [name=password]',
+			usernameCt: 'PanelConfig [name=login]',
+			passwordCt: 'PanelConfig [name=pass]',
+			connexionCt: 'PanelConfig [name=connexion]',
+			ipveraCt: 'PanelConfig [name=ipvera]',
 			panelConfig: 'PanelConfig',
-			loginBt: 'PanelConfig [name=logbt]',
+			loginBt: 'PanelConfig [name=loginbutton]',
 			
 			clockfieldsetCt: 'paneloverlay [name=fieldset1]',
 			clockdeiveidCt: 'paneloverlay [name=deviceid]',
@@ -66,8 +68,13 @@ Ext.define('myvera.controller.contdevices', {
 				delete cachedLoggedInUser.phantom;
 				this.getUsernameCt().setValue(cachedLoggedInUser.get('name'));
 				this.getPasswordCt().setValue(cachedLoggedInUser.get('pass'));
+				this.getConnexionCt().setValue(cachedLoggedInUser.get('connexion'));
+				this.getIpveraCt().setValue(cachedLoggedInUser.get('ipvera'));
 				this.loggedUserId = this.base64_encode(cachedLoggedInUser.get('name') + ":" + cachedLoggedInUser.get('pass'));
 				console.info('Auto-Login succeeded.');
+				Ext.getCmp('main').getTabBar().items.items[2].show();
+				Ext.getCmp('main').getTabBar().items.items[1].show();
+				Ext.getCmp('main').getTabBar().items.items[0].show();
 				this.LogIn();
 				//this.startstore();
 			},
@@ -77,7 +84,7 @@ Ext.define('myvera.controller.contdevices', {
 				Ext.Msg.alert('Erreur','Vous devez vous identifier !');
 			}
 		});
-	},	
+	},
 
 	startstore: function() {
 		var DevicesStore = Ext.getStore('devicesStore');
@@ -85,6 +92,7 @@ Ext.define('myvera.controller.contdevices', {
 			load: 'onDevicesStoreLoad',
 			scope: this
 		});
+		Ext.getStore('devicesStore').getProxy().setExtraParam( 'ipvera',  this.getIpveraCt().getValue());
 		DevicesStore.load();
 	},
 	
@@ -98,6 +106,7 @@ Ext.define('myvera.controller.contdevices', {
 		var vera_url = './protect/syncvera.php';
 		var syncheader = "";
 		syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
+		var ipvera = this.getIpveraCt().getValue();
 		Ext.Ajax.request({
 			url: vera_url,
 			headers: syncheader,
@@ -110,6 +119,7 @@ Ext.define('myvera.controller.contdevices', {
 				id: 'sdata',
 				loadtime: newloadtime,
 				dataversion: newdataversion,
+				ipvera: ipvera,
 				timeout: '60',
 				minimumdelay: '1000'
 			},
@@ -220,8 +230,11 @@ Ext.define('myvera.controller.contdevices', {
 						this.devicesync(0, 0);
 					}
 				} else {
-					Ext.Msg.alert('Erreur','Pas de réponse lors de la synchro.');
-					setTimeout(this.devicesync(0,0),2000);
+					Ext.Msg.confirm('Erreur', 'Pas de réponse lors de la synchro. Essayer à nouveau?', function(confirmed) {
+					if (confirmed == 'yes') {
+						this.devicesync(0,0);
+					}
+					}, this);
 				}
 			},
 			failure: function(response) {
@@ -360,6 +373,7 @@ Ext.define('myvera.controller.contdevices', {
 		var vera_url = './protect/syncvera.php';
 		var syncheader = "";
 		syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
+		var ipvera = this.getIpveraCt().getValue();
 		Ext.Ajax.request({
 			url: vera_url,
 			headers: syncheader,
@@ -368,6 +382,7 @@ Ext.define('myvera.controller.contdevices', {
 			scope: this,
 			params: {
 				id: 'lu_action',
+				ipvera: ipvera,
 				DeviceNum: record.get('id'),
 				serviceId: dservice,
 				action: daction,
@@ -394,20 +409,25 @@ Ext.define('myvera.controller.contdevices', {
 		if(this.logged!=true) {
 			var username = this.getUsernameCt().getValue(),
 				password = this.getPasswordCt().getValue();
-			if(!Ext.isEmpty(password) && !Ext.isEmpty(username)) {
+				ipvera = this.getIpveraCt().getValue();
+			if(!Ext.isEmpty(password) && !Ext.isEmpty(username) && !Ext.isEmpty(ipvera)) {
 				var user = Ext.create('myvera.model.CurrentUser', {
 					id: 1,
 					name: username,
-					pass: password
+					pass: password,
+					ipvera: ipvera
 				});
 				user.save();
 				this.loggedUserId=this.base64_encode(username+":"+password);
 				console.log('logUserIn: ', username);
 				//this.startstore();
 				this.LogIn();
-				
+
+				Ext.getCmp('main').getTabBar().items.items[2].show();				
+				Ext.getCmp('main').getTabBar().items.items[1].show();
+				Ext.getCmp('main').getTabBar().items.items[0].show();
 				Ext.getCmp('main').setActiveItem(Ext.getCmp('homepanel'));
-			} else Ext.Msg.alert('Erreur','vous devez indiquer un nom et un mot de passe.');
+			} else Ext.Msg.alert('Erreur','vous devez indiquer un login, un mot de passe et l\'IP de la Vera.');
 		} else {
 			Ext.ModelMgr.getModel('myvera.model.CurrentUser').load(1, {
 				success: function(user) {
@@ -431,6 +451,7 @@ Ext.define('myvera.controller.contdevices', {
 		//this.getLoginBt().setUi('decline');
 		this.getUsernameCt().hide();
 		this.getPasswordCt().hide();
+		this.getIpveraCt().hide();
 	},
 	
 	onClockSaveTap: function() {
@@ -468,11 +489,13 @@ Ext.define('myvera.controller.contdevices', {
 			var vera_url = './protect/syncvera.php';
 			var syncheader = "";
 			syncheader={'Authorization': 'Basic ' + this.loggedUserId};
+			var ipvera = this.getIpveraCt().getValue();
 			Ext.Ajax.request({
 				url: vera_url,
 				headers: syncheader,
 				params: {
 					id: 'vclock',
+					ipvera: ipvera,
 					DeviceNum: id,
 					alarmtime: heuredeb,
 					alarmduration: heurefin,
