@@ -1,8 +1,8 @@
 Ext.define('myvera.controller.contdevices', {
 	extend : 'Ext.app.Controller',
 	config: {
-		stores: ['devicesStore'],
-		views: ['dataplan0', 'dataplan1', 'datalist', 'listclock'],
+		stores: ['ConfigDevicesStore', 'devicesStore', 'storeRooms'],
+		views: ['dataplan0', 'dataplan1', 'datalist', 'listclock', 'PanelConfigNavigation', 'PanelConfigItemsMenu', 'PanelConfigItems', 'PanelConfigItem'],
 		//profile: Ext.os.deviceType.toLowerCase(),
 		
 		loggedUserId: null,
@@ -15,20 +15,24 @@ Ext.define('myvera.controller.contdevices', {
 			listeoff: 'datalistoff',
 			listclock: 'listclock',
 			
-			usernameCt: 'PanelConfig [name=login]',
-			passwordCt: 'PanelConfig [name=pass]',
-			connexionCt: 'PanelConfig [name=connexion]',
-			ipveraCt: 'PanelConfig [name=ipvera]',
-			panelConfig: 'PanelConfig',
-			loginBt: 'PanelConfig [name=loginbutton]',
+			usernameCt: 'PanelConfigGenerale [name=login]',
+			passwordCt: 'PanelConfigGenerale [name=pass]',
+			connexionCt: 'PanelConfigGenerale [name=connexion]',
+			ipveraCt: 'PanelConfigGenerale [name=ipvera]',
+			panelConfig: 'PanelConfigGenerale',
+			loginBt: 'PanelConfigGenerale [name=loginbutton]',
 			
 			clockfieldsetCt: 'paneloverlay [name=fieldset1]',
 			clockdeiveidCt: 'paneloverlay [name=deviceid]',
 			clockheuredebCt: 'paneloverlay [name=heuredeb]',
 			clockheurefinCt: 'paneloverlay [name=heurefin]',
 			clockmessageCt: 'paneloverlay [name=message]',
-			clocksaveclockBt: 'paneloverlay [name=saveclock]'
+			clocksaveclockBt: 'paneloverlay [name=saveclock]',
 			
+			configDevices: 'PanelConfigNavigation',
+			panelConfigItemsOpen: 'PanelConfigItemsMenu [name=openPanelConfigItems]',
+			panelItemsMoveOpen: 'PanelConfigItemsMenu [name=openPanelMove]',
+			listItemsSave: 'PanelConfigItemsMenu [name=sauver]'
 		},
 		control: {
 			plan0: {
@@ -57,7 +61,27 @@ Ext.define('myvera.controller.contdevices', {
 			
 			clocksaveclockBt: {
 				tap: 'onClockSaveTap'
-			}
+			},
+			
+			configDevices: {
+				activate: 'onActivatePanelItems'
+			},
+			
+			panelConfigItemsOpen: {
+				tap: 'onPanelConfigItemsOpen'
+			},
+			
+			panelItemsMoveOpen: {
+				tap: 'onPanelItemsMoveOpen'
+			},
+			
+			listItemsSave: {
+				tap: 'onListItemsSave'
+			},
+			
+			'PanelConfigItems': {
+				disclose: 'showDetail'
+			},
 		}
 	},
 
@@ -87,12 +111,14 @@ Ext.define('myvera.controller.contdevices', {
 	},
 
 	startstore: function() {
+		//var storeRooms = Ext.getStore('Rooms');
 		var DevicesStore = Ext.getStore('devicesStore');
 		DevicesStore.on({
 			load: 'onDevicesStoreLoad',
 			scope: this
 		});
 		Ext.getStore('devicesStore').getProxy().setExtraParam( 'ipvera',  this.getIpveraCt().getValue());
+		//storeRooms.load();
 		DevicesStore.load();
 	},
 	
@@ -518,6 +544,101 @@ Ext.define('myvera.controller.contdevices', {
 	
 	},
 
+	
+	onActivatePanelItems: function(panel,item) {
+		var ConfigDevicesStore = Ext.getStore('ConfigDevicesStore');
+		if (ConfigDevicesStore.getCount() <= 0) {
+			ConfigDevicesStore.on({
+					load: 'onLoadConfigDevicesStore',
+					scope: this
+			});
+			console.log("Load Vera Modules");
+			ConfigDevicesStore.getProxy().setExtraParam( 'ipvera',  this.getIpveraCt().getValue());
+			ConfigDevicesStore.getProxy().setExtraParam( 'id',  'sdata');
+			var syncheader = "";
+			syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
+			ConfigDevicesStore.getProxy().setHeaders(syncheader);
+			ConfigDevicesStore.load();
+		}
+
+	},
+	
+	onLoadConfigDevicesStore: function() {
+		var ConfigDevicesStore = Ext.getStore('ConfigDevicesStore');
+		console.log('Store:' + ConfigDevicesStore.getCount());
+		if (ConfigDevicesStore.getCount()>0) {
+			var devices = Ext.getStore('devicesStore');
+			if (devices.getCount()>0) {
+				var count = 0;
+				var letexte = "";
+				devices.data.each(function(device) {
+					var id = device.get('id');
+					configdevice = ConfigDevicesStore.getById(id);
+					if (configdevice) {
+						configdevice.set('state', '-4');
+						configdevice.set('category', device.get('category'));
+						var icon_num = device.get('icon');
+						if (icon_num != null) {
+							configdevice.set('icon', icon_num);
+						}
+						
+						var name = configdevice.get('name');
+						if (device.get('name') != name) {
+							device.set('name', name);
+							letexte+=" " + name + " renommé.";
+							count++;
+						}
+						var room = configdevice.get('room');
+						if (device.get('room') != room) {
+							device.set('room', room);
+							letexte+=" " + name + " dans pièce n°" + room;
+							count++;
+						}
+						if(count > 0) {
+							Ext.Msg.alert('Message', letexte + ' Sauver la liste des modules');
+						}
+						
+					} else {
+						//console.info('error finding ' + device.get('name'));
+						Ext.Msg.alert('Message', device.get('name') + ' non trouvé. Il faudrait le supprimer.');
+						ConfigDevicesStore.add({
+								id: device.get('id'),
+								name: device.get('name'),
+								state: "-4",
+								room: device.get('room'),
+								category: device.get('category'),
+								subcategory: device.get('subcategory'),
+								icon: device.get('icon')
+						});
+					}
+				});
+			}
+		}
+	},
+	
+	onPanelConfigItemsOpen: function() {
+		this.getConfigDevices().push({
+				xtype: 'PanelConfigItems',
+				title: 'Liste des modules'
+		});
+       },
+	onPanelItemsMoveOpen: function() {
+		Ext.Msg.alert('Message', "non implémenté");
+	},
+	
+	onListItemsSave: function() {
+		Ext.Msg.alert('Message', "non implémenté");
+	},
+	
+	showDetail: function(list, record) {
+			console.info('Record ' + record.get('name'));
+			this.getConfigDevices().push({
+					xtype: 'PanelConfigItem',
+					title: 'Détail du module',
+					data: record.getData()
+			});
+       },
+	
 	base64_encode: function(data) {
 		var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 		var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,

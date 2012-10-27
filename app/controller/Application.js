@@ -3,9 +3,9 @@ Ext.define('myvera.controller.Application', {
 	requires: ['Ext.DataView'],
 
 	config: {
-		views: ['Main','carouselplan','HomePanel','PanelConfig', 'datalist','panelinfo','dataliston','datalistoff','listclock','paneloverlay'],
-		stores: ['devicesStore', 'storeRooms'],
-		models: ['Veradevices', 'modelRooms','CurrentUser'],
+		views: ['Main','carouselplan','HomePanel', 'PanelConfig', 'PanelConfigGenerale', 'PanelConfigNavigation', 'datalist','panelinfo','dataliston','datalistoff','listclock','paneloverlay'],
+		stores: ['ConfigDevicesStore', 'devicesStore'],
+		models: ['Veradevices', 'Configdevices', 'modelRooms','CurrentUser'],
 		
 		panel3d: null,
 		

@@ -1,46 +1,24 @@
 Ext.define('myvera.view.PanelConfig', {
-	extend: 'Ext.form.Panel',
+	extend: 'Ext.tab.Panel',
 	xtype: 'PanelConfig',
 	id:'PanelConfig',
-	requires: ['Ext.field.Hidden', 'Ext.field.Password', 'Ext.field.Toggle'],
-	config: {
+		config: {
+		ui: 'light',
+		tabBar: {
+			layout:{
+				pack:'center'
+			}
+		},
+		activeTab: 1,
+		
 		items: [
 		{
-			xtype: 'fieldset',
-			title: 'Connexion locale',
-			//iconCls: 'home',
-			//instructions: 'Connexion locale',
-			items: [
-			{
-				xtype: 'hiddenfield',
-				value:'0',
-				name: 'connexion'
-			},
-			{
-				xtype: 'textfield',
-				name: 'login',
-				autoCapitalize: false,
-				placeHolder: 'Nom'
-			},
-			{
-				xtype: 'passwordfield',
-				name: 'pass',
-				placeHolder: 'Mot de passe'
-			},
-			{
-				xtype: 'textfield',
-				label: 'IP de la Vera',
-				id: 'ipvera',
-				name: 'ipvera',
-				placeHolder: 'Exemple: 192.168.0.1',
-			},
-			{
-				xtype: 'button',
-				text: 'S\'identifier',
-				name: 'loginbutton',
-				ui: 'confirm'
-			}
-			]
+			xtype:'PanelConfigGenerale',
+			title: 'Config. générale'
+		},
+		{
+			xtype: 'PanelConfigNavigation'
+			
 		}
 		]
 	}

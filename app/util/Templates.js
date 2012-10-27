@@ -23,7 +23,7 @@ Ext.define('myvera.util.Templates', {
 				'<tpl if="state==-2">jaune<tpl elseif="state==-3">rouge<tpl else>vide</tpl>'+
 				'.png" style="background-image: url(./resources/images/l'+
 				'<tpl if="icon!=null||category==2||category==3||category==4||category==8||category==101||category==103||category==120">'+
-					'<tpl if="icon != null">{icon;}<tpl elseif="category==4&&subcategory==4">44'+
+					'<tpl if="icon != null">{icon}<tpl elseif="category==4&&subcategory==4">44'+
 					'<tpl elseif="category==120&&subcategory==1">121<tpl elseif="category==120&&subcategory==2">122'+
 					'<tpl else>{category}</tpl>_<tpl if="category==4||category==103||category==120">{tripped}<tpl else>{status}</tpl>'+
 				'<tpl elseif="category==102">102_0'+
@@ -40,7 +40,7 @@ Ext.define('myvera.util.Templates', {
 				'<tpl elseif="category==120"><div><div class="clock1"><tpl if="var1==null">&nbsp;<tpl else>{var1}</tpl><br /><tpl if="var2==null||subcategory!=1">&nbsp;<tpl else>{var2}</tpl></div>'+
 					'<tpl if="armed!= null"><div class="clock2"><img class="armed2" src="./resources/images/arm{armed}.png" /></div></tpl></div>'+
 					'<div class="var2"><tpl if="var3==null">&nbsp;<tpl else><img class="clock" src="./resources/images/{var3}.png" /></tpl></div>'+
-				'<tpl elseif="level!= null"><div>'+
+				'<tpl elseif="category==2||category==8"><div>'+
 				'<div class="devicelevel1">'+
 					'<div class="lpourcent"><tpl if="level != null">{level} %<tpl else> </tpl></div>'+
 					'<img class="d25" src="./resources/images/25<tpl if="level&gt;=25">on</tpl>.png" />'+
