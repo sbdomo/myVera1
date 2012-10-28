@@ -127,8 +127,9 @@ Ext.define('myvera.controller.contdevices', {
 		this.devicesync(0,0);
 	},
 	
-	devicesync: function(newloadtime, newdataversion) {
+	devicesync: function(newloadtime, newdataversion, nonewsync) {
 		console.log("New Vera Sync");
+		if (nonewsync != true) nonewsync=false;
 		var vera_url = './protect/syncvera.php';
 		var syncheader = "";
 		syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
@@ -247,18 +248,19 @@ Ext.define('myvera.controller.contdevices', {
 							Ext.getCmp('panelinfo').tab.setBadgeText(count1 + '-' + count2);
 						}
 					}
-					
+					if(nonewsync!=true) {
 					//new sync
 					if (response.loadtime && response.dataversion) {
 						this.devicesync(response.loadtime,response.dataversion);
 					} else {
 						Ext.Msg.alert('Erreur', 'Synchronisation sans loadtime');
-						this.devicesync(0, 0);
+						this.devicesync(0, 0, nonewsync);
+					}
 					}
 				} else {
 					Ext.Msg.confirm('Erreur', 'Pas de réponse lors de la synchro. Essayer à nouveau?', function(confirmed) {
 					if (confirmed == 'yes') {
-						this.devicesync(0,0);
+						this.devicesync(0,0, nonewsync);
 					}
 					}, this);
 				}
@@ -268,7 +270,7 @@ Ext.define('myvera.controller.contdevices', {
 				//Ext.Msg.alert('Erreur','Synchronisation avec la Vera impossible ou interrompue');
 				Ext.Msg.confirm('Erreur', 'Synchronisation avec la Vera impossible ou interrompue. Essayer à nouveau?', function(confirmed) {
 					if (confirmed == 'yes') {
-						this.devicesync(0,0);
+						this.devicesync(0,0, nonewsync);
 					}
 				}, this);
 				
@@ -585,12 +587,14 @@ Ext.define('myvera.controller.contdevices', {
 						var name = configdevice.get('name');
 						if (device.get('name') != name) {
 							device.set('name', name);
+							device.set('state', "-3");
 							letexte+=" " + name + " renommé.";
 							count++;
 						}
 						var room = configdevice.get('room');
 						if (device.get('room') != room) {
 							device.set('room', room);
+							device.set('state', "-3");
 							letexte+=" " + name + " dans pièce n°" + room;
 							count++;
 						}
@@ -627,7 +631,19 @@ Ext.define('myvera.controller.contdevices', {
 	},
 	
 	onListItemsSave: function() {
-		Ext.Msg.alert('Message', "non implémenté");
+		var syncheader = "";
+		syncheader={'Authorization': 'Basic ' + this.loggedUserId};
+		Ext.getStore('devicesStore').getProxy().setHeaders(syncheader);
+		Ext.getStore('devicesStore').sync(
+			//ne marche pas...
+			//{
+			//	success: function(ed) {
+			//		Ext.Msg.alert('Message', "Liste savegardée.");
+			//	}
+			//}
+			);
+		this.devicesync(0,0, true);
+		Ext.Msg.alert('Message', "Sauvegarde lancée.");
 	},
 	
 	showDetail: function(list, record) {
