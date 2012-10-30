@@ -17,6 +17,9 @@ Ext.define('myvera.view.PanelConfig', {
 			title: 'Config. générale'
 		},
 		{
+			xtype: 'PanelConfigFloorsNavigation'
+		},
+		{
 			xtype: 'PanelConfigNavigation'
 			
 		}

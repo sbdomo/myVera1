@@ -2,11 +2,5 @@ Ext.define('myvera.view.carouselplan', {
 	extend: 'Ext.Carousel',
 	xtype: 'carouselplan',
 	alias: 'widget.carouselplan',
-	id: 'carouselplan',
-	config: {
-		items: [
-			{xtype: 'dataplan0'},
-			{xtype: 'dataplan1'}
-		]
-	}
+	id: 'carouselplan'
 });

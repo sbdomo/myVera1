@@ -35,24 +35,13 @@ Ext.define('myvera.store.devicesStore', {
 				//return '<div class="head'+ record.get('etage') + '">' + roomname + '</div>';
 			}
 		},
-		//sorters: 'name',
-
-		//autoload the data from the server
-//		autoLoad: true,
-//		listeners: {
-//			load: function(store) {
-//				Ext.Msg.alert('Test',Ext.getStore('devplan1Store').getById(35).get('name'))
-			    //store.each(function(record) {
-			    //                    });
-//		    }
-//	    },
 		//setup the proxy for the store to use an ajax proxy and give it a url to load
 		//the local contacts.json file
 		proxy: {
 			type: 'ajax',
 			//url: 'devices.json',
 			api: {
-				read: './config/devices.json',
+				read: './resources/config/devices.json',
 				update: "./protect/savedevices.php"
 			},
 			reader: {
@@ -64,5 +53,18 @@ Ext.define('myvera.store.devicesStore', {
 				rootProperty: 'devices'
 			}
 		}
+
+		//sorters: 'name',
+
+		//autoload the data from the server
+//		autoLoad: true,
+//		listeners: {
+//			load: function(store) {
+//				Ext.Msg.alert('Test',Ext.getStore('devplan1Store').getById(35).get('name'))
+			    //store.each(function(record) {
+			    //                    });
+//		    }
+//	    },
 	}
+
 });

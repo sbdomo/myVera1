@@ -5,7 +5,7 @@ header("content-type:application/json");
 
 if ($json = @file_get_contents('php://input'))
 {
-    $array_json = json_decode($json, true); 
+    $array_json = json_decode($json, true);
 }
 else
 {
@@ -33,7 +33,7 @@ foreach ($array_json['devices'] as $device) {
 }
 $result_json='{"devices":'.json_encode($data).'}';
 
-$fp = fopen("../config/devices.json","w+"); //creation du fichier
+$fp = fopen("../resources/config/devices.json","w+"); //creation du fichier
 fputs($fp, $result_json); // on écrit les données dans le data.json
 fclose($fp); //on ferme le data.json
 

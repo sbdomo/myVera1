@@ -11,6 +11,14 @@ Ext.define('myvera.view.PanelConfigNavigation', {
 			xtype: 'PanelConfigItemsMenu'
 			
 		}
-		]
+		],
+//		listeners:{
+//			pop:function(e,d){
+//				this.getNavigationBar( ).hide();
+//			},
+//			push:function(e,d){
+//				this.getNavigationBar( ).show();
+//			}
+//		}
 	}
 });

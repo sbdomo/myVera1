@@ -63,11 +63,10 @@ Ext.define('myvera.view.PanelConfigItem', {
 			xtype: 'selectfield',
 			label: 'Etage',
 			name: 'etage',
-			options: [
-				{text: 'Aucun',  value: '-1'},
-				{text: 'RDC',  value: '0'},
-				{text: 'Etage', value: '1'}
-			],
+			store: 'FloorsStore',
+   			displayField:'name',
+   			valueField: 'id',
+
 			listeners: 
 			{
 				change:function(selectbox,value,oldvalue){
@@ -178,6 +177,8 @@ Ext.define('myvera.view.PanelConfigItem', {
 					sceneon: formdata.sceneon,
 					sceneoff: formdata.sceneoff,
 					});
+					device = devices.getById(data.id);
+					device.setDirty();
 					listdevice.set("state", "-4");
 				}
 				listdevice.set("category", formdata.category);
@@ -226,7 +227,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 			    label.setHtml(html);
 			    if (e.config.data.state=="-4") {
 				    this.down('#SaveItem').setText('Mettre à jour');
-				    this.down('#SaveItem').setIconCls('refresh')
+				    this.down('#SaveItem').setIconCls('refresh');
 				    var devices = Ext.getStore('devicesStore');
 				    device = devices.getById(e.config.data.id);
 				    e.setValues(device.getData());
@@ -234,6 +235,8 @@ Ext.define('myvera.view.PanelConfigItem', {
 				    //Problème dans le selectfield : si etage est un entier et pas un string ??
 				    //Ce serait un bug (fix dans V. 2.02)
 				    e.setValues({etage: "" + device.get("etage")});
+				    e.setValues({category: "" + device.get("category")});
+				    
 				    if(device.get('etage')=="-1") {
 					    this.down('#PlaceItem').hide();
 					    this.down('#LeftItem').hide();

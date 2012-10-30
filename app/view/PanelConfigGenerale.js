@@ -30,7 +30,7 @@ Ext.define('myvera.view.PanelConfigGenerale', {
 			{
 				xtype: 'textfield',
 				label: 'IP de la Vera',
-				id: 'ipvera',
+				//id: 'ipvera',
 				name: 'ipvera',
 				placeHolder: 'Exemple: 192.168.0.1',
 			},

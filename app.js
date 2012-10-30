@@ -1,7 +1,7 @@
 Ext.application({
     name: 'myvera',
     controllers: [
-        'Application','contdevices'
+        'Application','contdevices', 'contconfig'
 	],
     requires: [
         'Ext.MessageBox',
