@@ -17,7 +17,7 @@ Ext.define('myvera.view.PanelConfigFloorsNavigation', {
 				handler: function(){
 					Ext.getCmp('PanelConfigFloorsNavigation').push({
 							xtype: 'PanelConfigFloor',
-							title: 'Detail'
+							title: 'Nouvelle vue'
 					});
 				}
 			}]

@@ -2,7 +2,7 @@ Ext.define('myvera.store.storeRooms', {
     extend: 'Ext.data.Store',
     config: {
             model: 'myvera.model.modelRooms',
-	    autoLoad: true,
+	    //autoLoad: true,
 	    storeId: 'Rooms',
 	    sorters: [
 	    {
@@ -16,7 +16,7 @@ Ext.define('myvera.store.storeRooms', {
 	    ],
 	    proxy: {
 		    type: 'ajax',
-		    url: 'rooms.json',
+		    url: './resources/config/rooms.json',
 		    reader: {
 			    type: 'json',
 			    rootProperty: 'rooms'

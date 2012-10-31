@@ -106,11 +106,6 @@ Ext.define('myvera.view.PanelConfigItem', {
 			}
 		},
 		{
-			xtype: 'textfield',
-			label: 'Num. icône (facultatif)',
-			name: 'icon'
-		},
-		{
 			xtype: 'selectfield',
 			label: 'Affichage dans "Allumés ?"',
 			name: 'verif',
@@ -119,6 +114,11 @@ Ext.define('myvera.view.PanelConfigItem', {
 			{text: 'si éteint',  value: 'off'},
 			{text: 'jamais', value: 'no'}
 			]
+		},
+		{
+			xtype: 'textfield',
+			label: 'Num. icône (facultatif)',
+			name: 'icon'
 		},
 		{
 			xtype: 'textfield',

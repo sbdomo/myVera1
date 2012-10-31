@@ -29,13 +29,6 @@ Ext.define('myvera.controller.contdevices', {
 			clocksaveclockBt: 'paneloverlay [name=saveclock]',
 		},
 		control: {
-//			plan0: {
-//				//activate: 'onActivate',
-//				itemtap: 'onDeviceTap'
-//			},
-//			plan1: {
-//				itemtap: 'onDeviceTap'
-//			},
 			liste1: {
 				itemtap: 'onDeviceTap'
 			},
@@ -83,22 +76,75 @@ Ext.define('myvera.controller.contdevices', {
 			}
 		});
 	},
-
+	
+	LogIn: function() {
+		this.logged = true;
+		this.startstore();
+		this.getLoginBt().setText('Se déconnecter');
+		//this.getLoginBt().setUi('decline');
+		this.getUsernameCt().hide();
+		this.getPasswordCt().hide();
+		this.getIpveraCt().hide();
+	},
 	startstore: function() {
-		//var storeRooms = Ext.getStore('Rooms');
-		var DevicesStore = Ext.getStore('devicesStore');
-		DevicesStore.on({
-			load: 'onDevicesStoreLoad',
+		var storeRooms = Ext.getStore('Rooms');
+		storeRooms.on({
+			load: 'onStoreRoomsLoad',
 			scope: this
 		});
-		Ext.getStore('devicesStore').getProxy().setExtraParam( 'ipvera',  this.getIpveraCt().getValue());
-		//storeRooms.load();
-		DevicesStore.load();
-		this.pushplans();
+		storeRooms.load();
+	},
+	
+	onStoreRoomsLoad: function() {
+		console.log("loading Rooms");
+		var storeRooms = Ext.getStore('Rooms');
+		if (storeRooms.getCount()>0) {
+			var DevicesStore = Ext.getStore('devicesStore');
+			DevicesStore.on({
+					load: 'onDevicesStoreLoad',
+					scope: this
+			});
+			
+			Ext.getStore('devicesStore').getProxy().setExtraParam( 'ipvera',  this.getIpveraCt().getValue());
+			
+			DevicesStore.load();
+			this.pushplans();
+		} else {
+			Ext.Msg.confirm('Erreur', 'Liste des pièces vide. La créer?', function(confirmed) {
+				if (confirmed == 'yes') {
+					console.log("Create Rooms");
+					var vera_url = './protect/createrooms.php';
+					var syncheader = "";
+					syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
+					var ipvera = this.getIpveraCt().getValue();
+					Ext.Ajax.request({
+							url: vera_url,
+							headers: syncheader,
+							method: 'GET',
+							timeout: 35000,
+							scope: this,
+							params: {
+								ipvera: ipvera,
+								timeout: '30'
+							},
+							success: function(result) {
+								//console.log("return Rooms");
+								if (result.responseText=="OK") {
+									storeRooms.load();
+								} else {
+									Ext.Msg.alert('Erreur', 'Erreur lors de la création de la liste des pièces.');
+								}
+							},
+							failure: function(response) {
+								Ext.Msg.alert('Erreur', 'Erreur lors de la création de la liste des pièces.');
+							}
+					});
+				}
+			}, this);
+		}
 	},
 	
 	onDevicesStoreLoad: function() {
-		this.logged = true;
 		this.devicesync(0,0);
 	},
 	
@@ -446,15 +492,6 @@ Ext.define('myvera.controller.contdevices', {
 				}
 			}, this);
 		}
-	},
-	
-	LogIn: function() {
-		this.startstore();
-		this.getLoginBt().setText('Se déconnecter');
-		//this.getLoginBt().setUi('decline');
-		this.getUsernameCt().hide();
-		this.getPasswordCt().hide();
-		this.getIpveraCt().hide();
 	},
 	
 	onClockSaveTap: function() {
