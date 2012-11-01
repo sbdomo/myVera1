@@ -1,11 +1,10 @@
 Ext.define('myvera.view.PanelConfigItem', {
 	extend: 'Ext.form.Panel',
 	xtype: 'PanelConfigItem',
+	id:'PanelConfigItem',
 	requires: [
-        'Ext.Img',
         'Ext.field.Text',
-        'Ext.field.Select',
-        'Ext.field.Toggle'
+        'Ext.field.Select'
 	],
 	config: {
 		name:'PanelConfigItem',
@@ -32,14 +31,14 @@ Ext.define('myvera.view.PanelConfigItem', {
 			{text: 'Door Lock',  value: '7'},
 			{text: 'Window Covering',  value: '8'},
 			{text: 'Remote Control',  value: '9'},
-			{text: 'IR TX',  value: '10'},
-			{text: 'Generic IO',  value: '11'},
+			{text: 'IR Transmitter',  value: '10'},
+			{text: 'Generic I/O',  value: '11'},
 			{text: 'Generic Sensor',  value: '12'},
 			{text: 'Serial Port',  value: '13'},
 			{text: 'Scene Controller',  value: '14'},
-			{text: 'AV',  value: '15'},
-			{text: 'Humidity',  value: '16'},
-			{text: 'Temperature',  value: '17'},
+			{text: 'A/V',  value: '15'},
+			{text: 'Humidity Sensor',  value: '16'},
+			{text: 'Temperature Sensor',  value: '17'},
 			{text: 'Light Sensor',  value: '18'},
 			{text: 'Zwave Int',  value: '19'},
 			{text: 'Insteon Int',  value: '20'},
@@ -63,10 +62,10 @@ Ext.define('myvera.view.PanelConfigItem', {
 			xtype: 'selectfield',
 			label: 'Etage',
 			name: 'etage',
+			itemId: 'etage',
 			store: 'FloorsStore',
    			displayField:'name',
    			valueField: 'id',
-
 			listeners: 
 			{
 				change:function(selectbox,value,oldvalue){
@@ -103,6 +102,14 @@ Ext.define('myvera.view.PanelConfigItem', {
 			iconMask: true,
 			text: 'Définir l\'emplacement',
 			handler: function(){
+				Ext.getCmp('main').getTabBar().hide();
+				Ext.getCmp('PanelConfig').getTabBar().hide();
+				Ext.getCmp('PanelConfigNavigation').getNavigationBar().setDocked('bottom');
+				Ext.getCmp('PanelConfigNavigation').push({
+					xtype: 'PanelImage',
+					title: 'Positionner le module sur la vue',
+					data: {id: this.getParent().down('#etage').getValue()}
+				});
 			}
 		},
 		{
@@ -175,7 +182,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 					icon: formdata.icon,
 					verif: formdata.verif,
 					sceneon: formdata.sceneon,
-					sceneoff: formdata.sceneoff,
+					sceneoff: formdata.sceneoff
 					});
 					device = devices.getById(data.id);
 					device.setDirty();
@@ -221,7 +228,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 		}
 		],
 		listeners:{
-		    painted:function(e,d){
+		    updatedata:function(e,d){
 			    var label = this.down('#titlePanelConfigItem');
 			    var html = label.getTpl().apply(e.config.data);
 			    label.setHtml(html);

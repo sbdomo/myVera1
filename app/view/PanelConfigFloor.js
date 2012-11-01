@@ -36,7 +36,7 @@ Ext.define('myvera.view.PanelConfigFloor', {
 		},
 		{
 			xtype: 'button',
-			text: 'Ajouter',
+			text: 'Ajouter et sauver',
 			ui: 'confirm',
 			iconCls: 'add',
 			iconMask: true,
@@ -46,7 +46,7 @@ Ext.define('myvera.view.PanelConfigFloor', {
 		},
                 {
 			xtype: 'button',
-			text: 'Supprimer',
+			text: 'Supprimer et sauver',
 			margin: 5,
 			iconCls: 'trash',
 			iconMask: true,
@@ -62,7 +62,7 @@ Ext.define('myvera.view.PanelConfigFloor', {
 				label.setHtml(html);
 				e.down('#deletefloor').show();
 				e.down('#savefloor').setIconCls('refresh');
-				e.down('#savefloor').setText('Mettre à jour');
+				e.down('#savefloor').setText('Sauver');
 				Ext.getCmp('name').setValue(d.name);
 				Ext.getCmp('path').setValue(d.path);
 			}

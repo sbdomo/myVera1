@@ -5,20 +5,20 @@ Ext.define('myvera.view.PanelConfigNavigation', {
 	requires: ['myvera.view.PanelConfigItemsMenu'],
 	config: {
 		iconCls : '',
-		title : 'Modules' ,
+		title : 'Modules',
+		defaultBackButtonText: 'Retour',
 		items: [
 		{
 			xtype: 'PanelConfigItemsMenu'
 			
 		}
 		],
-//		listeners:{
-//			pop:function(e,d){
-//				this.getNavigationBar( ).hide();
-//			},
-//			push:function(e,d){
-//				this.getNavigationBar( ).show();
-//			}
-//		}
+		listeners:{
+			pop:function(e,d){
+				Ext.getCmp('main').getTabBar().show();
+				Ext.getCmp('PanelConfig').getTabBar().show();
+				this.getNavigationBar().setDocked('top');
+			}
+		}
 	}
 });

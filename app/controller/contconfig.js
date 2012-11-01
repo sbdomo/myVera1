@@ -2,7 +2,7 @@ Ext.define('myvera.controller.contconfig', {
 	extend : 'Ext.app.Controller',
 	config: {
 		//stores: ['ConfigDevicesStore', 'devicesStore'],
-		views: ['PanelConfigNavigation', 'PanelConfigItemsMenu', 'PanelConfigItems', 'PanelConfigItem', 'PanelConfigFloorsNavigation', 'PanelConfigFloors', 'PanelConfigFloor'],
+		views: ['PanelConfigNavigation', 'PanelConfigItemsMenu', 'PanelConfigItems', 'PanelConfigItem', 'PanelImage', 'carouselitemmove', 'datamove', 'PanelConfigFloorsNavigation', 'PanelConfigFloors', 'PanelConfigFloor'],
 		refs: {
 			configDevices: 'PanelConfigNavigation',
 			panelConfigItemsOpen: 'PanelConfigItemsMenu [name=openPanelConfigItems]',
@@ -46,6 +46,10 @@ Ext.define('myvera.controller.contconfig', {
 			deletefloor: {
 				tap: 'ondeletefloor'
 			},
+			
+			'#RefreshRoomsButton': {
+				tap: 'onRefreshRooms'
+			}
 		}
 	},
 	
@@ -131,7 +135,30 @@ Ext.define('myvera.controller.contconfig', {
 		});
        },
 	onPanelItemsMoveOpen: function() {
-		Ext.Msg.alert('Message', "non implémenté");
+		//Ext.Msg.alert('Message', "non implémenté");
+		var FloorsStore = Ext.getStore('FloorsStore');
+		FloorsStore.load(function(floors) {
+			var items = [];
+			Ext.each(floors, function(floor) {
+				if(floor.data.id!=-1) {
+					items.push({
+						xtype: 'datamove',
+						style: 'background:url(./resources/config/img/'+floor.data.path+') no-repeat left top;',
+						itemTpl: '<tpl if="etage=='+floor.data.id+'">' + myvera.util.Templates.getTplplan() + '</tpl>'
+					});
+				}
+			});
+			Ext.getCmp('carouselitemmove').setItems(items);
+			Ext.getCmp('carouselitemmove').setActiveItem(0);
+		});
+		
+		Ext.getCmp('main').getTabBar().hide();
+		Ext.getCmp('PanelConfig').getTabBar().hide();
+		Ext.getCmp('PanelConfigNavigation').getNavigationBar().setDocked('bottom');
+		this.getConfigDevices().push({
+			xtype: 'carouselitemmove',
+			title: 'Drag-drop'
+		});
 	},
 	
 	onListItemsSave: function() {
@@ -201,17 +228,16 @@ Ext.define('myvera.controller.contconfig', {
 						Ext.getCmp('PanelConfigFloorsNavigation').pop();
 						Ext.Msg.alert('Message', 'Etage ' + response.result + ' mis à jour');
 					} else {
-						alert('Erreur lors de la mise à jour');
+						Ext.Msg.alert('Erreur lors de la mise à jour');
 					}
 				} else {
-					alert('Erreur lors de la mise à jour');
+					Ext.Msg.alert('Erreur lors de la mise à jour');
 				}
 			},
 			failure: function(response) {
-				alert('Erreur lors de la mise à jour');
+				Ext.Msg.alert('Erreur lors de la mise à jour');
 			}
 		});
-		//Ext.Msg.alert('Message', "Edition - non implémenté");
 	},
        
 	ondeletefloor: function() {
@@ -265,20 +291,141 @@ Ext.define('myvera.controller.contconfig', {
 							Ext.Msg.alert('Message', 'Modules déplacés dans "Aucun étage". Sauvez la liste des modules !');
 						}
 					} else {
-						alert('Erreur lors de la supression de la vue');
+						Ext.Msg.alert('Erreur lors de la supression de la vue');
 					}
 				} else {
-					alert('Erreur lors de la supression de la vue');
+					Ext.Msg.alert('Erreur lors de la supression de la vue');
 				}
 			},
-			failure: function(response) {
-				alert('Erreur lors de la supression de la vue');
+			failure: function(result) {
+				Ext.Msg.alert('Erreur lors de la supression de la vue');
 			}
 		});
 			
 			
 	  }
 	  }, this);
+	},
+	
+	onRefreshRooms: function() {
+		var contdevices = this.getApplication().getController('contdevices');
+		var syncheader = "";
+		syncheader={'Authorization': 'Basic ' + contdevices.loggedUserId};
+		ipvera = contdevices.ipvera;
+		Ext.Ajax.request({
+			scope: this,
+			url: './protect/readrooms.php',
+			headers: syncheader,
+			method: 'GET',
+			params: {
+				ipvera: ipvera
+			},
+			success: function(result){
+				
+				
+				var response = Ext.decode(result.responseText, true);
+				if (response) {
+					if (response.success=="true") {				
+						var RoomsStore = Ext.getStore('Rooms');
+						var listId = new Array();				
+						for (idrecord in response.rooms) {
+							var result_room = response.rooms[idrecord];
+							var resultId=result_room.id;
+							room = RoomsStore.getById(resultId);
+							if (room) {
+								room.set('name', result_room.name);
+							} else {
+								RoomsStore.add({
+									id: resultId,
+									name: result_room.name,
+									section: result_room.section
+								});
+								room = RoomsStore.getById(resultId);
+								room.setDirty();
+							}
+							listId.push(resultId);
+						}
+						RoomsStore.data.each(function(testroom) {
+							var id=testroom.get('id');
+							if(!Ext.Array.contains(listId, id)) {
+								//alert(testroom.get('name'));
+								RoomsStore.remove(testroom);
+							}
+						});
+						
+						Ext.Msg.confirm('Mise à jour', 'Enregister la liste des pièces?', function(confirmed) {
+							if (confirmed == 'yes') {
+								this.saveRooms();
+							}
+						}, this);
+				
+					} else {
+						Ext.Msg.alert('Erreur lors de la lecture des pièces');
+					}				
+				} else {
+					Ext.Msg.alert('Erreur lors de la lecture des pièces');
+				}
+				
+
+			},
+			failure: function(response) {
+				Ext.Msg.alert('Erreur lors de la lecture des pièces');
+			}
+		});
+	
+	
+	},
+	
+	saveRooms: function() {
+		 Ext.Viewport.setMasked({
+                     xtype: 'loadmask',
+                     message: 'Sauvegarde....'
+		 });
+		
+		
+		
+		var RoomsStore = Ext.getStore('Rooms');
+		var contdevices = this.getApplication().getController('contdevices');
+		var syncheader = "";
+		syncheader={'Authorization': 'Basic ' + contdevices.loggedUserId};
+
+		allDataStore = [];
+		RoomsStore.each(function(record){
+			allDataStore.push(record.getData());
+		});
+		
+		Ext.Ajax.request({
+			url: './protect/saverooms.php',
+			headers: syncheader,
+			method: 'POST',
+			jsonData: {
+				rooms: allDataStore
+			},
+			success: function(result){
+				//Le texte de  Ext.Msg.alert n'est pas correct si on l'ouvre après confirmation
+				//de Ext.Msg.confirm de "onRefreshRooms"
+				if (result.responseText=="true") {
+					Ext.Viewport.setMasked(false);
+					//new Ext.MessageBox().show({
+					//		title: 'Pièces',
+					//		message: 'Liste sauvegardée.'
+					//});
+				} else {
+					Ext.Viewport.setMasked(false);
+					new Ext.MessageBox().show({
+							title: 'Pièces',
+							message: 'Erreur lors de la sauvegarde.'
+					});
+				}
+			},
+			failure: function(result) {
+				Ext.Viewport.setMasked(false);
+				new Ext.MessageBox().show({
+					title: 'Pièces',
+					message: 'Erreur lors de la sauvegarde.'
+				});
+			}
+		});
 	}
 	
 });

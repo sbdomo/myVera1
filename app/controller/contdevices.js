@@ -7,6 +7,7 @@ Ext.define('myvera.controller.contdevices', {
 		
 		loggedUserId: null,
 		logged: null,
+		ipvera: null,
 		refs: {
 			plan: 'dataplan',
 			liste1: 'datalist',
@@ -60,7 +61,8 @@ Ext.define('myvera.controller.contdevices', {
 				this.getUsernameCt().setValue(cachedLoggedInUser.get('name'));
 				this.getPasswordCt().setValue(cachedLoggedInUser.get('pass'));
 				this.getConnexionCt().setValue(cachedLoggedInUser.get('connexion'));
-				this.getIpveraCt().setValue(cachedLoggedInUser.get('ipvera'));
+				this.ipvera = cachedLoggedInUser.get('ipvera');
+				this.getIpveraCt().setValue(this.ipvera);
 				this.loggedUserId = this.base64_encode(cachedLoggedInUser.get('name') + ":" + cachedLoggedInUser.get('pass'));
 				console.info('Auto-Login succeeded.');
 				Ext.getCmp('main').getTabBar().items.items[2].show();
@@ -116,7 +118,7 @@ Ext.define('myvera.controller.contdevices', {
 					var vera_url = './protect/createrooms.php';
 					var syncheader = "";
 					syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
-					var ipvera = this.getIpveraCt().getValue();
+					var ipvera = this.ipvera;
 					Ext.Ajax.request({
 							url: vera_url,
 							headers: syncheader,
@@ -154,7 +156,7 @@ Ext.define('myvera.controller.contdevices', {
 		var vera_url = './protect/syncvera.php';
 		var syncheader = "";
 		syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
-		var ipvera = this.getIpveraCt().getValue();
+		var ipvera = this.ipvera;
 		Ext.Ajax.request({
 			url: vera_url,
 			headers: syncheader,
@@ -422,7 +424,7 @@ Ext.define('myvera.controller.contdevices', {
 		var vera_url = './protect/syncvera.php';
 		var syncheader = "";
 		syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
-		var ipvera = this.getIpveraCt().getValue();
+		var ipvera = this.ipvera;
 		Ext.Ajax.request({
 			url: vera_url,
 			headers: syncheader,
@@ -458,7 +460,7 @@ Ext.define('myvera.controller.contdevices', {
 		if(this.logged!=true) {
 			var username = this.getUsernameCt().getValue(),
 				password = this.getPasswordCt().getValue();
-				ipvera = this.getIpveraCt().getValue();
+				ipvera = this.ipvera;
 			if(!Ext.isEmpty(password) && !Ext.isEmpty(username) && !Ext.isEmpty(ipvera)) {
 				var user = Ext.create('myvera.model.CurrentUser', {
 					id: 1,
@@ -529,7 +531,7 @@ Ext.define('myvera.controller.contdevices', {
 			var vera_url = './protect/syncvera.php';
 			var syncheader = "";
 			syncheader={'Authorization': 'Basic ' + this.loggedUserId};
-			var ipvera = this.getIpveraCt().getValue();
+			var ipvera = this.ipvera;
 			Ext.Ajax.request({
 				url: vera_url,
 				headers: syncheader,

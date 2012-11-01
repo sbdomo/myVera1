@@ -6,6 +6,7 @@ Ext.define('myvera.view.PanelConfigFloorsNavigation', {
 	config: {
 		iconCls: '',
 		title: 'Vue étages ou pièces',
+		defaultBackButtonText: 'Retour',
 		navigationBar: {
 			items: [
 			{
