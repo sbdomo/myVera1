@@ -460,7 +460,7 @@ Ext.define('myvera.controller.contdevices', {
 		if(this.logged!=true) {
 			var username = this.getUsernameCt().getValue(),
 				password = this.getPasswordCt().getValue();
-				ipvera = this.ipvera;
+				ipvera = this.getIpveraCt().getValue();
 			if(!Ext.isEmpty(password) && !Ext.isEmpty(username) && !Ext.isEmpty(ipvera)) {
 				var user = Ext.create('myvera.model.CurrentUser', {
 					id: 1,
@@ -470,6 +470,7 @@ Ext.define('myvera.controller.contdevices', {
 				});
 				user.save();
 				this.loggedUserId=this.base64_encode(username+":"+password);
+				this.ipvera=this.getIpveraCt().getValue();
 				console.log('logUserIn: ', username);
 				//this.startstore();
 				this.LogIn();

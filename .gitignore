@@ -9,3 +9,5 @@ floors.json
 resources/config/img/*.jpg
 protect/.htaccess
 resources/sass/.sass-cache
+build/
+archive/
