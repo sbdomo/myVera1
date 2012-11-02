@@ -22,6 +22,12 @@ Ext.define('myvera.view.PanelConfigItem', {
 			name: 'category',
 			options: [
 			{text: 'Unknown plugin', value:'0'},
+			{text: 'Virtual ON/OFF Switches (plugin)',  value: '101'},
+			{text: 'Variable Container (plugin)',  value: '102'},
+			{text: 'Google Calendar Switch (plugin)',  value: '103'},
+			{text: 'Virtual Clock - Alarm Clock (plugin)',  value: '120'},
+			{text: 'Virtual Clock - Electrical timer (plugin)',  value: '121'},
+			{text: 'Virtual Clock - Timer (plugin)',  value: '122'},
 			{text: 'Interface',  value: '1'},
 			{text: 'Dimmable light',  value: '2'},
 			{text: 'Switch',  value: '3'},
@@ -44,13 +50,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 			{text: 'Insteon Int',  value: '20'},
 			{text: 'Power Meter',  value: '21'},
 			{text: 'Alarm Panel',  value: '22'},
-			{text: 'Alarm Partition',  value: '23'},
-			{text: 'Virtual ON/OFF Switches (plugin)',  value: '101'},
-			{text: 'Variable Container (plugin)',  value: '102'},
-			{text: 'Google Calendar Switch (plugin)',  value: '103'},
-			{text: 'Virtual Clock - Alarm Clock (plugin)',  value: '120'},
-			{text: 'Virtual Clock - Electrical timer (plugin)',  value: '121'},
-			{text: 'Virtual Clock - Timer (plugin)',  value: '122'}
+			{text: 'Alarm Partition',  value: '23'}
 			]
 		},
 		{
@@ -200,7 +200,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 			itemId: 'DeleteItem',
 			iconCls: 'trash',
 			iconMask: true,
-			//ui: 'decline',
+			ui: 'decline',
 			hidden: true,
 			text: 'Enlever le module',
 			

@@ -49,6 +49,7 @@ Ext.define('myvera.view.PanelConfigFloor', {
 			text: 'Supprimer et sauver',
 			margin: 5,
 			iconCls: 'trash',
+			ui: 'decline',
 			iconMask: true,
 			hidden: true,
 			name: 'deletefloor',
