@@ -15,11 +15,13 @@ Ext.define('myvera.controller.contdevices', {
 			listeoff: 'datalistoff',
 			listclock: 'listclock',
 			
+			panelConfig: 'PanelConfigGenerale',
 			usernameCt: 'PanelConfigGenerale [name=login]',
 			passwordCt: 'PanelConfigGenerale [name=pass]',
 			connexionCt: 'PanelConfigGenerale [name=connexion]',
 			ipveraCt: 'PanelConfigGenerale [name=ipvera]',
-			panelConfig: 'PanelConfigGenerale',
+			isVue: 'PanelConfigGenerale [name=isVue]',
+			isReveil: 'PanelConfigGenerale [name=isReveil]',
 			loginBt: 'PanelConfigGenerale [name=loginbutton]',
 			
 			clockfieldsetCt: 'paneloverlay [name=fieldset1]',
@@ -43,6 +45,14 @@ Ext.define('myvera.controller.contdevices', {
 				itemtap: 'onDeviceTap'
 			},
 			
+			isVue: {
+				change: 'onIsVueChange'
+			},
+			
+			isReveil: {
+				change: 'onIsReveilChange'
+			},
+			
 			loginBt: {
 				tap: 'onLoginTap'
 			},
@@ -50,6 +60,7 @@ Ext.define('myvera.controller.contdevices', {
 			clocksaveclockBt: {
 				tap: 'onClockSaveTap'
 			}
+			
 		}
 	},
 
@@ -64,8 +75,21 @@ Ext.define('myvera.controller.contdevices', {
 				this.ipvera = cachedLoggedInUser.get('ipvera');
 				this.getIpveraCt().setValue(this.ipvera);
 				this.loggedUserId = this.base64_encode(cachedLoggedInUser.get('name') + ":" + cachedLoggedInUser.get('pass'));
+				
+				this.getIsVue().setValue(cachedLoggedInUser.get('isVue'));
+				this.getIsReveil().setValue(cachedLoggedInUser.get('isReveil'));
+				
 				console.info('Auto-Login succeeded.');
-				Ext.getCmp('main').getTabBar().items.items[2].show();
+				
+				if(this.getIsReveil().getValue()) Ext.getCmp('main').getTabBar().items.items[2].show();
+				
+				var application = this.getApplication().getController('Application');
+				if(!this.getIsVue().getValue()) {
+					application.setPanel3d(false);
+					Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('datalist'));
+					Ext.getCmp('carouselplan').hide();
+				}
+				
 				Ext.getCmp('main').getTabBar().items.items[1].show();
 				Ext.getCmp('main').getTabBar().items.items[0].show();
 				this.LogIn();
@@ -466,14 +490,19 @@ Ext.define('myvera.controller.contdevices', {
 	onLoginTap: function() {
 		if(this.logged!=true) {
 			var username = this.getUsernameCt().getValue(),
-				password = this.getPasswordCt().getValue();
-				ipvera = this.getIpveraCt().getValue();
+				password = this.getPasswordCt().getValue(),
+				ipvera = this.getIpveraCt().getValue(),
+				isVue = this.getIsVue().getValue(),
+				isReveil = this.getIsReveil().getValue();
+				
 			if(!Ext.isEmpty(password) && !Ext.isEmpty(username) && !Ext.isEmpty(ipvera)) {
 				var user = Ext.create('myvera.model.CurrentUser', {
 					id: 1,
 					name: username,
 					pass: password,
-					ipvera: ipvera
+					ipvera: ipvera,
+					isVue: isVue,
+					isReveil: isReveil
 				});
 				user.save();
 				this.loggedUserId=this.base64_encode(username+":"+password);
@@ -482,7 +511,15 @@ Ext.define('myvera.controller.contdevices', {
 				//this.startstore();
 				this.LogIn();
 
-				Ext.getCmp('main').getTabBar().items.items[2].show();				
+				if(this.getIsReveil().getValue()) Ext.getCmp('main').getTabBar().items.items[2].show();
+				
+				var application = this.getApplication().getController('Application');
+				if(!this.getIsVue().getValue()) {
+					application.setPanel3d(false);
+					Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('datalist'));
+					Ext.getCmp('carouselplan').hide();
+				}
+				
 				Ext.getCmp('main').getTabBar().items.items[1].show();
 				Ext.getCmp('main').getTabBar().items.items[0].show();
 				Ext.getCmp('main').setActiveItem(Ext.getCmp('homepanel'));
@@ -501,6 +538,57 @@ Ext.define('myvera.controller.contdevices', {
 					window.location.reload();
 				}
 			}, this);
+		}
+	},
+	
+	onIsVueChange: function() {
+		if(this.logged==true) {
+		Ext.ModelMgr.getModel('myvera.model.CurrentUser').load(1, {
+			success: function(user) {
+				var isvue = this.getIsVue().getValue();
+				user.set("isVue", isvue);
+				user.save();
+				var application = this.getApplication().getController('Application');
+				if (isvue) {
+					application.setPanel3d(true);
+					Ext.getCmp('carouselplan').show();
+					var orientation = Ext.Viewport.getOrientation();
+					if(orientation=="landscape") {
+						Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('carouselplan'));
+					}					
+				} else {
+					application.setPanel3d(false);
+					Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('datalist'));
+					Ext.getCmp('carouselplan').hide();
+				}
+				
+			},
+			failure: function() {
+				// this should not happen, nevertheless:
+				alert("Erreur !");
+			}
+		}, this);
+		}
+	},
+	
+	onIsReveilChange: function() {
+		if(this.logged==true) {
+		Ext.ModelMgr.getModel('myvera.model.CurrentUser').load(1, {
+			success: function(user) {
+				var isreveil = this.getIsReveil().getValue();
+				user.set("isReveil", isreveil);
+				user.save();
+				if(isreveil) {
+					Ext.getCmp('main').getTabBar().items.items[2].show();
+				} else {
+					Ext.getCmp('main').getTabBar().items.items[2].hide();
+				}
+			},
+			failure: function() {
+				// this should not happen, nevertheless:
+				alert("Erreur !");
+			}
+		}, this);
 		}
 	},
 	

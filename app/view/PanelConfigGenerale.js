@@ -41,6 +41,26 @@ Ext.define('myvera.view.PanelConfigGenerale', {
 				ui: 'confirm'
 			}
 			]
+		},
+		{
+			xtype: 'fieldset',
+			title: 'Affichage',
+			items: [
+			{
+				xtype: 'togglefield',
+				name: 'isVue',
+				value: 1,
+				label: 'Vue étages et pièces'//,
+				//labelWidth: '40%'
+			},
+			{
+				xtype: 'togglefield',
+				name: 'isReveil',
+				value: 1,
+				label: 'Réveils'//,
+				//labelWidth: '40%'
+			}
+			]
 		}
 		]
 	}

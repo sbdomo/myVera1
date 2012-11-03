@@ -7,6 +7,8 @@ Ext.define('myvera.controller.Application', {
 		stores: ['ConfigDevicesStore', 'devicesStore', 'FloorsStore'],
 		models: ['Veradevices', 'Configdevices', 'modelRooms','CurrentUser', 'Floors'],
 		
+		panel3d: true,
+		
 		refs: {
 		},
 		control: {
@@ -33,12 +35,15 @@ Ext.define('myvera.controller.Application', {
 		Ext.getCmp('paneloverlay').hide();
 	},
 	onOrientationchange: function(viewport, orientation, width, height) {
-		var homepanel = Ext.getCmp('homepanel');
-		console.log('orientationchange : ' + homepanel.id);		
-		if(orientation=="landscape") {
-			if(homepanel.getActiveItem().id=='datalist') homepanel.setActiveItem(Ext.getCmp('carouselplan'));
-		} else {
-			if(homepanel.getActiveItem().id=='carouselplan') homepanel.setActiveItem(Ext.getCmp('datalist'));
+		//comment mettre this.panel3d plutôt que this.getApplication().getController('Application').getPanel3d() ?
+		if(this.getApplication().getController('Application').getPanel3d()==true) {
+			var homepanel = Ext.getCmp('homepanel');
+			console.log('orientationchange : ' + homepanel.id);
+			if(orientation=="landscape") {
+				if(homepanel.getActiveItem().id=='datalist') homepanel.setActiveItem(Ext.getCmp('carouselplan'));
+			} else {
+				if(homepanel.getActiveItem().id=='carouselplan') homepanel.setActiveItem(Ext.getCmp('datalist'));
+			}
 		}
-	    }
+	}
 });

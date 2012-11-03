@@ -134,9 +134,12 @@ Ext.define('myvera.controller.contconfig', {
 				title: 'Liste des modules'
 		});
        },
-	onPanelItemsMoveOpen: function() {
+       
+       	onPanelItemsMoveOpen: function() {
 		//Ext.Msg.alert('Message', "non implémenté");
 		var FloorsStore = Ext.getStore('FloorsStore');
+		if(FloorsStore.getCount()>1) {
+		//Chercher pourquoi il faut faire load, j'ai une erreur si je ne le fait pas...
 		FloorsStore.load(function(floors) {
 			var items = [];
 			Ext.each(floors, function(floor) {
@@ -150,15 +153,19 @@ Ext.define('myvera.controller.contconfig', {
 			});
 			Ext.getCmp('carouselitemmove').setItems(items);
 			Ext.getCmp('carouselitemmove').setActiveItem(0);
+			
 		});
 		
 		Ext.getCmp('main').getTabBar().hide();
 		Ext.getCmp('PanelConfig').getTabBar().hide();
 		Ext.getCmp('PanelConfigNavigation').getNavigationBar().setDocked('bottom');
 		this.getConfigDevices().push({
-			xtype: 'carouselitemmove',
-			title: 'Faire glisser les modules'
+				xtype: 'carouselitemmove',
+				title: 'Faire glisser les modules'
 		});
+		} else {
+			Ext.Msg.alert('Il n\'y a pas de vue.');
+		}
 	},
 	
 	onListItemsSave: function() {
