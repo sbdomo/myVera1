@@ -114,6 +114,11 @@ Ext.define('myvera.controller.contdevices', {
 		} else {
 			Ext.Msg.confirm('Erreur', 'Liste des pièces vide. La créer?', function(confirmed) {
 				if (confirmed == 'yes') {
+					Ext.Viewport.setMasked({
+						xtype: 'loadmask',
+						message: 'Sauvegarde....'
+					});
+
 					console.log("Create Rooms");
 					var vera_url = './protect/createrooms.php';
 					var syncheader = "";
@@ -131,6 +136,7 @@ Ext.define('myvera.controller.contdevices', {
 							},
 							success: function(result) {
 								//console.log("return Rooms");
+								Ext.Viewport.setMasked(false);
 								if (result.responseText=="OK") {
 									storeRooms.load();
 								} else {
@@ -138,6 +144,7 @@ Ext.define('myvera.controller.contdevices', {
 								}
 							},
 							failure: function(response) {
+								Ext.Viewport.setMasked(false);
 								Ext.Msg.alert('Erreur', 'Erreur lors de la création de la liste des pièces.');
 							}
 					});

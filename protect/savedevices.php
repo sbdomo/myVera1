@@ -2,15 +2,10 @@
 //header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-cache, must-revalidate');
 header("content-type:application/json");
-
+$success="false";
 if ($json = @file_get_contents('php://input'))
 {
-    $array_json = json_decode($json, true);
-}
-else
-{
-    $array_json = array();
-}
+$array_json = json_decode($json, true);
 $data=array();
 foreach ($array_json['devices'] as $device) {
 	$data[]=array (
@@ -36,6 +31,8 @@ $result_json='{"devices":'.json_encode($data).'}';
 $fp = fopen("../resources/config/devices.json","w+"); //creation du fichier
 fputs($fp, $result_json); // on écrit les données dans le data.json
 fclose($fp); //on ferme le data.json
-
-echo "{'success':true}";
+$success="true";
+}
+//echo "{'success':true}";
+echo $success
 ?>

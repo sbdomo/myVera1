@@ -157,25 +157,53 @@ Ext.define('myvera.controller.contconfig', {
 		Ext.getCmp('PanelConfigNavigation').getNavigationBar().setDocked('bottom');
 		this.getConfigDevices().push({
 			xtype: 'carouselitemmove',
-			title: 'Drag-drop'
+			title: 'Faire glisser les modules'
 		});
 	},
 	
 	onListItemsSave: function() {
-		var syncheader = "";
+		
+		Ext.Viewport.setMasked({
+                     xtype: 'loadmask',
+                     message: 'Sauvegarde....'
+		 });
+		
 		var contdevices = this.getApplication().getController('contdevices');
+		var devicesStore = Ext.getStore('devicesStore')
+		var syncheader = "";
 		syncheader={'Authorization': 'Basic ' + contdevices.loggedUserId};
 		Ext.getStore('devicesStore').getProxy().setHeaders(syncheader);
-		Ext.getStore('devicesStore').sync(
-			//ne marche pas...
-			//{
-			//	success: function(ed) {
-			//		Ext.Msg.alert('Message', "Liste savegardée.");
-			//	}
-			//}
-			);
+		
+		//Remplacement par Ext.Ajax.request car il manque un callback...
+		//Ext.getStore('devicesStore').sync();
+		var allDataStore = [];
+		devicesStore.each(function(record){
+			allDataStore.push(record.getData());
+		});
+				
+		Ext.Ajax.request({
+			url: './protect/savedevices.php',
+			headers: syncheader,
+			method: 'POST',
+			jsonData: {
+				devices: allDataStore
+			},
+			success: function(result){
+				if (result.responseText=="true") {
+					Ext.Viewport.setMasked(false);
+				} else {
+					Ext.Viewport.setMasked(false);
+					Ext.Msg.alert('Erreur lors de la sauvegarde.');
+				}
+			},
+			failure: function(result) {
+				Ext.Viewport.setMasked(false);
+				Ext.Msg.alert('Erreur lors de la sauvegarde.');
+			}
+		});
+		
 		contdevices.devicesync(0,0, true);
-		Ext.Msg.alert('Message', "Sauvegarde lancée.");
+		//Ext.Msg.alert('Message', "Sauvegarde lancée.");
 	},
 	
 	showDetailItem: function(list, record) {
@@ -202,6 +230,10 @@ Ext.define('myvera.controller.contconfig', {
 	},
 	      
 	onsavefloor: function() {
+		Ext.Viewport.setMasked({
+                     xtype: 'loadmask',
+                     message: 'Sauvegarde....'
+		 });
 		var form = this.getPanelConfigFloor();
 		var formdata = form.getValues();
 		var contdevices = this.getApplication().getController('contdevices');
@@ -222,6 +254,7 @@ Ext.define('myvera.controller.contconfig', {
 			success: function(result){
 				var response = Ext.decode(result.responseText, true);
 				if (response) {
+					Ext.Viewport.setMasked(false);
 					if (response.success=="true") {
 						// process server response here
 						contdevices.pushplans();
@@ -235,6 +268,7 @@ Ext.define('myvera.controller.contconfig', {
 				}
 			},
 			failure: function(response) {
+				Ext.Viewport.setMasked(false);
 				Ext.Msg.alert('Erreur lors de la mise à jour');
 			}
 		});
@@ -243,8 +277,11 @@ Ext.define('myvera.controller.contconfig', {
 	ondeletefloor: function() {
 	  Ext.Msg.confirm('Supression', 'Voulez-vous effacer cette vue?', function(confirmed) {
 	  if (confirmed == 'yes') {
-			
-			
+		Ext.Viewport.setMasked({
+                     xtype: 'loadmask',
+                     message: 'Suppression....'
+		 })
+		
 		var form = this.getPanelConfigFloor();
 		var formdata = form.getValues();
 		var contdevices = this.getApplication().getController('contdevices');
@@ -284,6 +321,9 @@ Ext.define('myvera.controller.contconfig', {
 						}
 						
 						contdevices.pushplans();
+						
+						Ext.Viewport.setMasked(false);
+						
 						Ext.getCmp('PanelConfigFloorsNavigation').pop();
 						if(movemodule==false) {
 							Ext.Msg.alert('Message', 'Etage ' + response.result + ' supprimé.');
@@ -291,13 +331,16 @@ Ext.define('myvera.controller.contconfig', {
 							Ext.Msg.alert('Message', 'Modules déplacés dans "Aucun étage". Sauvez la liste des modules !');
 						}
 					} else {
+						Ext.Viewport.setMasked(false);
 						Ext.Msg.alert('Erreur lors de la supression de la vue');
 					}
 				} else {
+					Ext.Viewport.setMasked(false);
 					Ext.Msg.alert('Erreur lors de la supression de la vue');
 				}
 			},
 			failure: function(result) {
+				Ext.Viewport.setMasked(false);
 				Ext.Msg.alert('Erreur lors de la supression de la vue');
 			}
 		});
@@ -308,6 +351,12 @@ Ext.define('myvera.controller.contconfig', {
 	},
 	
 	onRefreshRooms: function() {
+		
+		Ext.Viewport.setMasked({
+                     xtype: 'loadmask',
+                     message: 'Mise à jour....'
+		});
+		
 		var contdevices = this.getApplication().getController('contdevices');
 		var syncheader = "";
 		syncheader={'Authorization': 'Basic ' + contdevices.loggedUserId};
@@ -322,12 +371,11 @@ Ext.define('myvera.controller.contconfig', {
 			},
 			success: function(result){
 				
-				
 				var response = Ext.decode(result.responseText, true);
 				if (response) {
-					if (response.success=="true") {				
+					if (response.success=="true") {
 						var RoomsStore = Ext.getStore('Rooms');
-						var listId = new Array();				
+						var listId = new Array();
 						for (idrecord in response.rooms) {
 							var result_room = response.rooms[idrecord];
 							var resultId=result_room.id;
@@ -352,7 +400,7 @@ Ext.define('myvera.controller.contconfig', {
 								RoomsStore.remove(testroom);
 							}
 						});
-						
+						Ext.Viewport.setMasked(false);
 						Ext.Msg.confirm('Mise à jour', 'Enregister la liste des pièces?', function(confirmed) {
 							if (confirmed == 'yes') {
 								this.saveRooms();
@@ -360,15 +408,18 @@ Ext.define('myvera.controller.contconfig', {
 						}, this);
 				
 					} else {
+						Ext.Viewport.setMasked(false);
 						Ext.Msg.alert('Erreur lors de la lecture des pièces');
 					}				
 				} else {
+					Ext.Viewport.setMasked(false);
 					Ext.Msg.alert('Erreur lors de la lecture des pièces');
 				}
 				
 
 			},
 			failure: function(response) {
+				Ext.Viewport.setMasked(false);
 				Ext.Msg.alert('Erreur lors de la lecture des pièces');
 			}
 		});
@@ -382,14 +433,12 @@ Ext.define('myvera.controller.contconfig', {
                      message: 'Sauvegarde....'
 		 });
 		
-		
-		
 		var RoomsStore = Ext.getStore('Rooms');
 		var contdevices = this.getApplication().getController('contdevices');
 		var syncheader = "";
 		syncheader={'Authorization': 'Basic ' + contdevices.loggedUserId};
-
-		allDataStore = [];
+		
+		var allDataStore = [];
 		RoomsStore.each(function(record){
 			allDataStore.push(record.getData());
 		});
