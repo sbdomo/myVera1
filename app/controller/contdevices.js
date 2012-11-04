@@ -228,36 +228,39 @@ Ext.define('myvera.controller.contdevices', {
 								
 								var category = device.get('category');
 								switch (category) {
-									case 101: //vswitch
-										device.set('var1', response.devices[idrecord].text1);
-										device.set('var2', response.devices[idrecord].text2);
-										break;
-									case 102: //vcontainer
-										device.set('var1', response.devices[idrecord].variable1);
-										device.set('var2', response.devices[idrecord].variable2);
-										device.set('var3', response.devices[idrecord].variable3);
-										device.set('var4', response.devices[idrecord].variable4);
-										device.set('var5', response.devices[idrecord].variable5);
-										break;
-									case 103: //gcal
-										device.set('var1', response.devices[idrecord].nextevent);
-										break;
-									case 120: //vclock
-										device.set('var1', response.devices[idrecord].alarmtime);
-										if (response.devices[idrecord].alarmtime != null) {
-											heuredep = new Date("February 5, 2001 " + response.devices[idrecord].alarmtime);
-											duration = response.devices[idrecord].alarmduration;
-											heuredep.setTime(heuredep.getTime() + (eval(duration) * 1000));
-											heures = Ext.Date.format(heuredep, 'H:i:s')
-											device.set('var2', heures);
-										}
-										device.set('var3', response.devices[idrecord].next);
-										device.set('var4', response.devices[idrecord].text1);
-										device.set('var5', response.devices[idrecord].alarmtype);
-										device.set('var6', response.devices[idrecord].weekdays);
-										break;
-									default:
-										break;
+								case 17: //temperature sensor
+									device.set('var1', response.devices[idrecord].temperature);
+									break;
+								case 101: //vswitch
+									device.set('var1', response.devices[idrecord].text1);
+									device.set('var2', response.devices[idrecord].text2);
+									break;
+								case 102: //vcontainer
+									device.set('var1', response.devices[idrecord].variable1);
+									device.set('var2', response.devices[idrecord].variable2);
+									device.set('var3', response.devices[idrecord].variable3);
+									device.set('var4', response.devices[idrecord].variable4);
+									device.set('var5', response.devices[idrecord].variable5);
+									break;
+								case 103: //gcal
+									if(response.devices[idrecord].nextevent) device.set('var1', response.devices[idrecord].nextevent);
+									break;
+								case 120: //vclock
+									device.set('var1', response.devices[idrecord].alarmtime);
+									if (response.devices[idrecord].alarmtime != null) {
+										heuredep = new Date("February 5, 2001 " + response.devices[idrecord].alarmtime);
+										duration = response.devices[idrecord].alarmduration;
+										heuredep.setTime(heuredep.getTime() + (eval(duration) * 1000));
+										heures = Ext.Date.format(heuredep, 'H:i:s')
+										device.set('var2', heures);
+									}
+									device.set('var3', response.devices[idrecord].next);
+									device.set('var4', response.devices[idrecord].text1);
+									device.set('var5', response.devices[idrecord].alarmtype);
+									device.set('var6', response.devices[idrecord].weekdays);
+									break;
+								default:
+									break;
 								}
 							}
 						}

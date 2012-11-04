@@ -14,7 +14,10 @@ Ext.define('myvera.view.PanelConfigItem', {
 		{
 			html:"",
 			itemId: 'titlePanelConfigItem',
-			tpl: [ '<img style="float: left;" src="resources/images/l<tpl if="icon!=null">{icon}<tpl else>{category}</tpl>_0.png" /><p style="line-height: 50px">&nbsp;&nbsp;{name} - ID:{id}</p><p>&nbsp;</p>' ]
+			tpl: [ '<img style="float: left;" height="40px" src="resources/images/l<tpl if="icon!=null">{icon}'+
+			'<tpl elseif="category==4&&subcategory==4">44'+
+			'<tpl elseif="category==120&&subcategory==1">121<tpl elseif="category==120&&subcategory==2">122'+
+			'<tpl else>{category}</tpl>_0.png" /><p style="line-height: 30px">&nbsp;&nbsp;{name} - ID:{id}</p><p>&nbsp;</p>' ]
 		},
 		{
 			xtype: 'selectfield',
@@ -25,9 +28,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 			{text: 'Virtual ON/OFF Switches (plugin)',  value: '101'},
 			{text: 'Variable Container (plugin)',  value: '102'},
 			{text: 'Google Calendar Switch (plugin)',  value: '103'},
-			{text: 'Virtual Clock - Alarm Clock (plugin)',  value: '120'},
-			{text: 'Virtual Clock - Electrical timer (plugin)',  value: '121'},
-			{text: 'Virtual Clock - Timer (plugin)',  value: '122'},
+			{text: 'Virtual Clock',  value: '120'},
 			{text: 'Interface',  value: '1'},
 			{text: 'Dimmable light',  value: '2'},
 			{text: 'Switch',  value: '3'},
@@ -51,12 +52,30 @@ Ext.define('myvera.view.PanelConfigItem', {
 			{text: 'Power Meter',  value: '21'},
 			{text: 'Alarm Panel',  value: '22'},
 			{text: 'Alarm Partition',  value: '23'}
-			]
+			],
+			listeners: 
+			{
+				change:function(selectbox,value,oldvalue){
+					var subcat = this.getParent().down('#subcategory');
+					if(value=="120"){
+						var options = [
+						{text: 'Alarm Clock',  value: '0'},
+						{text: 'Electrical timer',  value: '1'},
+						{text: 'Timer',  value: '2'},
+						];
+						subcat.setOptions(options);
+						subcat.show();
+					} else {
+						subcat.hide();
+					}
+				}
+			}
 		},
 		{
-			xtype: 'textfield',
+			xtype: 'selectfield',
 			label: 'Sub-catégorie',
-			name: 'subcategory'
+			name: 'subcategory',
+			itemId: 'subcategory'
 		},
 		{
 			xtype: 'selectfield',
@@ -95,7 +114,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 		},
 		{
 			xtype: 'button',
-			margin: 20,
+			margin: 15,
 			align: 'center',
 			itemId: 'PlaceItem',
 			iconCls: 'locate',
@@ -242,7 +261,9 @@ Ext.define('myvera.view.PanelConfigItem', {
 				    //Problème dans le selectfield : si etage est un entier et pas un string ??
 				    //Ce serait un bug (fix dans V. 2.02)
 				    e.setValues({etage: "" + device.get("etage")});
+				    //e.setValues({subcat: "" + device.get("subcategory")});
 				    e.setValues({category: "" + device.get("category")});
+				    e.setValues({subcategory: "" + device.get("subcategory")});
 				    
 				    if(device.get('etage')=="-1") {
 					    this.down('#PlaceItem').hide();
@@ -258,9 +279,11 @@ Ext.define('myvera.view.PanelConfigItem', {
 					    this.down('#TopItem').hide();
 				    }
 				    if(e.config.data.verif==null) e.config.data.verif="yes";
+				    //e.config.data.subcat=e.config.data.subcategory;
 				    e.setValues(e.config.data);
 				    //Bug avec entier ??
 				    e.setValues({category: "" + e.config.data.category});
+				    e.setValues({subcategory: "" + e.config.data.subcategory});
 			    }
 		    }
 	}

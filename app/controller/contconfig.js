@@ -87,6 +87,7 @@ Ext.define('myvera.controller.contconfig', {
 					if (configdevice) {
 						configdevice.set('state', '-4');
 						configdevice.set('category', device.get('category'));
+						configdevice.set('subcategory', device.get('subcategory'));
 						var icon_num = device.get('icon');
 						if (icon_num != null) {
 							configdevice.set('icon', icon_num);

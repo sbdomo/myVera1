@@ -7,13 +7,18 @@ Ext.define('myvera.util.Templates', {
     config: {
 	tplplan: '<div class="x-img x-floating" style="height: 50px; width: 50px; top: {top}px; left: {left}px; z-index: 6; background-image: url(./resources/images/d'+
 	    '<tpl if="icon!=null||category==2||category==3||category==4||category==8||category==101||category==103||category==120">'+
-	    	'<tpl if="icon!=null">{icon}<tpl elseif="category==4&&subcategory==4">44<tpl else>{category}</tpl>_<tpl if="category==4||category==103||category==120">{tripped}<tpl else>{status}</tpl>' +
+	    	'<tpl if="icon!=null">{icon}<tpl elseif="category==4&&subcategory==4">44<tpl else>{category}</tpl>_<tpl if="category==4||category==103||category==120">{tripped}<tpl else>{status}</tpl>'+
+	    '<tpl elseif="category==17">17_0'+
 	    '<tpl elseif="category==102">102_0'+
 	    '<tpl else>0_0</tpl>.png); ">'+
 	    '<tpl if="state==-2"><img src="./resources/images/jaune.png" /><tpl elseif="state==-3"><img src="./resources/images/rouge.png" />'+
 	    '<tpl elseif="(category==4||category==103)&&armed==0"><img src="./resources/images/darm.png" />'+
 	    '<tpl elseif="category==120"><tpl if="armed==1&&var3==\'off\'"><img src="./resources/images/doff.png" />'+
 	    	'<tpl elseif="armed==0&&var3==\'off\'"><img src="./resources/images/darmoff.png" /><tpl elseif="armed==0&&var3==\'on\'"><img src="./resources/images/darm.png" /></tpl>'+
+	    '</tpl>'+
+	    '<tpl if="category==17&&var1!=null"><div class="texticon">{var1} °C</div>'+
+	    '<tpl elseif="(category==2||category==8)&&level!=null"><div class="texticon">{level} %</div>'+
+	    '<tpl elseif="category==120&&var1!=null"><div class="texticon">{var1}</div>'+
 	    '</tpl>'+
 	    '</div>',
 	tpllist: '<div class="devtitle">{name}</div>'+
@@ -26,6 +31,7 @@ Ext.define('myvera.util.Templates', {
 					'<tpl if="icon != null">{icon}<tpl elseif="category==4&&subcategory==4">44'+
 					'<tpl elseif="category==120&&subcategory==1">121<tpl elseif="category==120&&subcategory==2">122'+
 					'<tpl else>{category}</tpl>_<tpl if="category==4||category==103||category==120">{tripped}<tpl else>{status}</tpl>'+
+				'<tpl elseif="category==17">17_0'+
 				'<tpl elseif="category==102">102_0'+
 				'<tpl else>0_0</tpl>.png);" />'+
 			'</div>'+
@@ -33,6 +39,7 @@ Ext.define('myvera.util.Templates', {
 				'<tpl if="category==4&&armed!= null"><div>'+
 				'<img class="armed" src="./resources/images/arm{armed}.png" /> '+
 				'</div>'+
+				'<tpl elseif="category==17"><div class="vargros"><tpl if="var1==null">&nbsp;<tpl else>{var1} °C</tpl></div>'+
 				'<tpl elseif="category==101"><div class="var"><tpl if="var1==null">&nbsp;<tpl else>{var1}</tpl><br /><tpl if="var2==null">&nbsp;<tpl else>{var2}</tpl></div>'+
 				'<tpl elseif="category==102"><div class="var"><tpl if="var1==null">&nbsp;<tpl else>{var1}</tpl><br /><tpl if="var2==null">&nbsp;<tpl else>{var2}</tpl><br /><tpl if="var3==null">&nbsp;<tpl else>{var3}</tpl><br /><tpl if="var4==null">&nbsp;<tpl else>{var4}</tpl> <tpl if="var5==null">&nbsp;<tpl else>{var5}</tpl></div>'+
 				'<tpl elseif="category==103"><div><div class="longvar"><tpl if="var1==null">&nbsp;<tpl else>{var1}</tpl></div>'+
