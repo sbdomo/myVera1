@@ -12,6 +12,7 @@ Ext.define('myvera.model.Veradevices', {
 			{name: 'level', type: 'int'},
 			{name: 'category', type: 'int'},
 			{name: 'subcategory', type: 'int'},
+			{name: 'watts', type: 'int'},
 			{name: 'left', type: 'int'},
 			{name: 'top', type: 'int'},
 			{name: 'etage', type: 'int'},

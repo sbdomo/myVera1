@@ -217,6 +217,7 @@ Ext.define('myvera.controller.contdevices', {
 							if (device) {
 								device.set('status', response.devices[idrecord].status);
 								device.set('level', response.devices[idrecord].level);
+								device.set('watts', response.devices[idrecord].watts);
 								device.set('comment', response.devices[idrecord].comment);
 								if (response.devices[idrecord].state == null) {
 									device.set('state', 0);
@@ -228,8 +229,14 @@ Ext.define('myvera.controller.contdevices', {
 								
 								var category = device.get('category');
 								switch (category) {
+								case 16: //humidity sensor
+									device.set('var1', response.devices[idrecord].humidity);
+									break;
 								case 17: //temperature sensor
 									device.set('var1', response.devices[idrecord].temperature);
+									break;
+								case 18: //light sensor
+									device.set('var1', response.devices[idrecord].light);
 									break;
 								case 101: //vswitch
 									device.set('var1', response.devices[idrecord].text1);
