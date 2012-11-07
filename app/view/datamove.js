@@ -27,6 +27,8 @@ Ext.define('myvera.view.datamove', {
 				record.set('left', record.get('left')+target.getX());
 				record.set('top', record.get('top')+target.getY());
 				Ext.getCmp('carouselitemmove').toggleSwipe(true);
+				myvera.app.getController('myvera.controller.contconfig').alertDirtydevices();
+				
 			}
 			
 		}

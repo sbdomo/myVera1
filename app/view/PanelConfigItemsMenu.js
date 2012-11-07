@@ -15,7 +15,7 @@ Ext.define('myvera.view.PanelConfigItemsMenu', {
 		items: [
 		{ ui: 'normal', text: 'Gestion de la liste des modules', name:'openPanelConfigItems' },
 		{ ui: 'normal', text: 'Positionner les modules sur les vues', name:'openPanelMove' },
-		{ ui: 'confirm', text: 'Sauver', name: 'sauver' }
+		{ ui: 'normal', text: 'Sauver', name: 'sauver', disabled: true}
 		]
 	}
 });

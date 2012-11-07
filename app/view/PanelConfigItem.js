@@ -211,6 +211,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 				listdevice.set("subcategory", formdata.subcategory);
 				listdevice.set("icon", formdata.icon);
 				Ext.getCmp('PanelConfigNavigation').pop();
+				myvera.app.getController('myvera.controller.contconfig').alertDirtydevices();
 			}
 		},
 		{
@@ -243,6 +244,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 				listdevice.set("sceneoff", formdata.sceneoff);
 				listdevice.set("state", "0");
 				Ext.getCmp('PanelConfigNavigation').pop();
+				myvera.app.getController('myvera.controller.contconfig').alertDirtydevices();
 			}
 		}
 		],

@@ -14,6 +14,10 @@ Ext.define('myvera.controller.contconfig', {
 			savefloor: 'PanelConfigFloor [name=savefloor]',
 			deletefloor: 'PanelConfigFloor [name=deletefloor]'
 		},
+		//0 si rien à sauver et qu'il n'y a pas eu de message d'alerte, 1 si plus rien à sauver mais qu'il y a eu le message d'alerte, 2 s'il faut sauver
+		//pour la sauvegarde de devicesStore
+		dirtydevices: 0,
+		
 		control: {
 			configDevices: {
 				activate: 'onActivatePanelItems'
@@ -108,6 +112,10 @@ Ext.define('myvera.controller.contconfig', {
 							count++;
 						}
 						if(count > 0) {
+							var contconfig = myvera.app.getController('myvera.controller.contconfig');
+							contconfig.dirtydevices = 2;
+							contconfig.getListItemsSave().setUi('decline');
+							contconfig.getListItemsSave().setDisabled(false);
 							Ext.Msg.alert('Message', letexte + ' Sauver la liste des modules');
 						}
 						
@@ -198,6 +206,10 @@ Ext.define('myvera.controller.contconfig', {
 			},
 			success: function(result){
 				if (result.responseText=="true") {
+					var control =myvera.app.getController('myvera.controller.contconfig');
+					control.getListItemsSave().setUi('normal');
+					control.getListItemsSave().setDisabled(true);
+					control.dirtydevices = 1;
 					Ext.Viewport.setMasked(false);
 				} else {
 					Ext.Viewport.setMasked(false);
@@ -336,6 +348,10 @@ Ext.define('myvera.controller.contconfig', {
 						if(movemodule==false) {
 							Ext.Msg.alert('Message', 'Etage ' + response.result + ' supprimé.');
 						} else {
+							var contconfig = myvera.app.getController('myvera.controller.contconfig');
+							contconfig.dirtydevices = 2;
+							contconfig.getListItemsSave().setUi('decline');
+							contconfig.getListItemsSave().setDisabled(false);
 							Ext.Msg.alert('Message', 'Modules déplacés dans "Aucun étage". Sauvez la liste des modules !');
 						}
 					} else {
@@ -483,6 +499,29 @@ Ext.define('myvera.controller.contconfig', {
 				});
 			}
 		});
+	},
+	
+	alertDirtydevices: function(msg) {
+		if(!msg) msg='Pensez à sauvegarder !';
+		switch (this.dirtydevices) {
+		case 1: //si plus rien à sauver mais qu'il y a eu le message d'alerte
+			this.getListItemsSave().setUi('decline');
+			this.getListItemsSave().setDisabled(false);
+			this.dirtydevices = 2;
+			break;
+		case 2: //s'il faut sauver
+			//nothing
+			break;
+		default://0 si rien à sauver et qu'il n'y a pas eu de message d'alerte
+			this.dirtydevices = 2;
+			this.getListItemsSave().setUi('decline');
+			this.getListItemsSave().setDisabled(false);
+			new Ext.MessageBox().show({
+				title: 'Modules',
+				message: msg
+			});
+			break;
+		}
 	}
 	
 });
