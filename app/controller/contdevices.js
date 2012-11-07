@@ -497,6 +497,77 @@ Ext.define('myvera.controller.contdevices', {
 		});
 	},
 	
+	onDeviceHoldTap: function(view, index, target, record, event) {
+		var dservice = 'urn:upnp-org:serviceId:SwitchPower1';
+		var daction = 'SetTarget';
+		var sdim = 'urn:upnp-org:serviceId:Dimming1';
+		var actdim = 'SetLoadLevelTarget';
+		var tardim = 'newLoadlevelTarget';
+		var dtargetvalue = 'newTargetValue';
+		var syncheader = "";
+		syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
+		
+		var newstatus = "0";
+		var ipvera = this.ipvera;
+		var popup=new Ext.Panel({
+			modal:true,
+			hideOnMaskTap: true,
+			width:300,
+			height:50,
+			centered: true,
+			items:[{
+				xtype:'slider',
+				value:record.data.level,
+				listeners: {
+					change: function(Slider, thumb, newValue, oldValue, eOpts) {
+						dservice=sdim;
+						daction=actdim;
+						dtargetvalue=tardim;
+						newstatus = newValue;
+						console.log("switch : " + record.get('name'));
+						record.set('state', -2);
+						var vera_url = './protect/syncvera.php';
+						
+						Ext.Ajax.request({
+								url: vera_url,
+								headers: syncheader,
+								method: 'GET',
+								timeout: 10000,
+								scope: this,
+								params: {
+									id: 'lu_action',
+									ipvera: ipvera,
+									DeviceNum: record.get('id'),
+									serviceId: dservice,
+									action: daction,
+									newvalue: newstatus,
+									targetvalue: dtargetvalue
+									
+								},
+								success: function(response) {
+									if (Ext.Array.contains([2, 3, 8], record.get('category'))) {
+										record.set('state', -2);
+									}
+								},
+								failure: function(response) {
+									console.log("switch error :" + record.get('name'));
+									Ext.Msg.alert('Erreur','Switch Error');
+								}
+						});
+					}
+				}
+			}],
+			listeners: {
+				hide: function(panel) {
+					delete myvera.view.dataplan.lastTapHold;
+				}
+			}
+		});
+		Ext.Viewport.add(popup);
+		popup.show();
+		
+	},
+	
 	onLoginTap: function() {
 		if(this.logged!=true) {
 			var username = this.getUsernameCt().getValue(),
