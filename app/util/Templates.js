@@ -71,13 +71,14 @@ Ext.define('myvera.util.Templates', {
 					'<img class="d75" src="./resources/images/75<tpl if="level&gt;=75">on</tpl>.png" /> '+
 					'<img class="d100" src="./resources/images/100<tpl if="level==100">on</tpl>.png" />'+
 				'</div>'+
-				'<div class="watt"><tpl if="watts != null">{watts} W<tpl else> </tpl></div>'+
 				'</div>'+
 				'</tpl>'+
 			'</div>'+
 		'</div>'+
-		'<div class="footer"><tpl if="comment!=\'\'&&comment!=null">{comment}<tpl else>&nbsp;</tpl></div>'
+		'<div class="footer"><tpl if="watts != null&&category!=3&&category!=21"><span class="wattfooter">{watts} W</span></tpl><tpl if="comment!=\'\'&&comment!=null">{comment}<tpl else>&nbsp;</tpl></div>'
+		
     },
+    
 //    statics: {
 //        tplplan: '<div class="x-img x-floating" style="height: 50px; width: 50px; top: {top}px; left: {left}px; z-index: 6; background-image: url(./img/d{category}_{status}.png); ">' +
 //		'<tpl if="state==-2"><img src="./img/jaune.png" /><tpl elseif="state==-3"><img src="./img/rouge.png" /></tpl>'
