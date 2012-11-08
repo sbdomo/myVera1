@@ -16,6 +16,7 @@ Ext.define('myvera.model.Veradevices', {
 			{name: 'left', type: 'int'},
 			{name: 'top', type: 'int'},
 			{name: 'etage', type: 'int'},
+			{name:'color', type: 'string'},
 			{name: 'tripped', type: 'int'},
 			{name: 'icon', type: 'int'},
 			{name: 'verif', type: 'string'},

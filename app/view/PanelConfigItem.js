@@ -142,6 +142,31 @@ Ext.define('myvera.view.PanelConfigItem', {
 			]
 		},
 		{
+			xtype: 'selectfield',
+			label: 'Couleur du texte sous l\'icône',
+			    defaultType: 'panel',
+			name:'color',
+			itemId:'color',
+			options: [
+			{text: 'Black', value:'000000'},
+			{text: 'White',  value: 'FFFFFF'},
+			{text: 'Yellow',  value: 'FFFF00'},
+			{text: 'Fuchsia',  value: 'FF00FF'},
+			{text: 'Red',  value: 'FF0000'},
+			{text: 'Silver',  value: 'C0C0C0'},
+			{text: 'Gray',  value: '808080'},
+			{text: 'Olive',  value: '808000'},
+			{text: 'Purple',  value: '800080'},
+			{text: 'Maroon',  value: '800000'},
+			{text: 'Aqua',  value: '00FFFF'},
+			{text: 'Lime',  value: '00FF00'},
+			{text: 'Teal',  value: '008080'},
+			{text: 'Green',  value: '008000'},
+			{text: 'Blue',  value: '0000FF'},
+			{text: 'Navy',  value: '000080'}
+			]
+		},
+		{
 			xtype: 'textfield',
 			label: 'Num. icône (facultatif)',
 			name: 'icon'
@@ -180,6 +205,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 					device.set("left", formdata.left);
 					device.set("top", formdata.top);
 					device.set("etage", formdata.etage);
+					device.set("color", formdata.color);
 					device.set("icon", formdata.icon);
 					device.set("verif", formdata.verif);
 					device.set("sceneon", formdata.sceneon);
@@ -198,6 +224,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 					left: formdata.left,
 					top: formdata.top,
 					etage: formdata.etage,
+					color: formdata.color,
 					icon: formdata.icon,
 					verif: formdata.verif,
 					sceneon: formdata.sceneon,
@@ -207,9 +234,11 @@ Ext.define('myvera.view.PanelConfigItem', {
 					device.setDirty();
 					listdevice.set("state", "-4");
 				}
+				//Paramètres utilsés dans l'affichage de la liste de ConfigDevices, il faut donc les mettre à jour.
 				listdevice.set("category", formdata.category);
 				listdevice.set("subcategory", formdata.subcategory);
 				listdevice.set("icon", formdata.icon);
+				
 				Ext.getCmp('PanelConfigNavigation').pop();
 				myvera.app.getController('myvera.controller.contconfig').alertDirtydevices();
 			}
@@ -232,12 +261,14 @@ Ext.define('myvera.view.PanelConfigItem', {
 				
 				var listdevices = Ext.getStore('ConfigDevicesStore');
 				var listdevice = listdevices.getById(form.config.data.id);
+				//Paramètres du modules transférés à configDevices pour pouvoir le réaffecter sans devoir tout paramétrer à nouveau
 				var formdata = form.getValues();
 				listdevice.set("category", formdata.category);
 				listdevice.set("subcategory", formdata.subcategory);
 				listdevice.set("left", formdata.left);
 				listdevice.set("top", formdata.top);
 				listdevice.set("etage", formdata.etage);
+				listdevice.set("color", formdata.color);
 				listdevice.set("icon", formdata.icon);
 				listdevice.set("verif", formdata.verif);
 				listdevice.set("sceneon", formdata.sceneon);
@@ -253,6 +284,35 @@ Ext.define('myvera.view.PanelConfigItem', {
 			    var label = this.down('#titlePanelConfigItem');
 			    var html = label.getTpl().apply(e.config.data);
 			    label.setHtml(html);
+			    
+			    var colorpicker = this.down('#color');
+			    colorpicker.setDefaultTabletPickerConfig({
+				 items: [
+				 {
+					 xtype: 'list',
+					 store: colorpicker.getStore(),
+					 itemTpl: '<div style="background-color: #{value}; float: left; width: 150px; border: 1px solid #000;">&nbsp;</div>&nbsp;&nbsp;&nbsp;{text}',
+					 
+					 listeners: {
+						 select: function(item, record) {
+							 if (record) {
+								 colorpicker.setValue(record);
+							 }
+						    },
+						    itemtap: function(item, index, elem) {
+							    //hide the select window
+							    this.up('panel').hide({
+									    type : 'fade',
+									    out  : true,
+									    scope: this
+							    });
+						    },
+					    }
+				    }
+				    ],
+			    });
+			    
+			    
 			    if (e.config.data.state=="-4") {
 				    this.down('#SaveItem').setText('Mettre à jour');
 				    this.down('#SaveItem').setIconCls('refresh');
@@ -260,10 +320,10 @@ Ext.define('myvera.view.PanelConfigItem', {
 				    device = devices.getById(e.config.data.id);
 				    e.setValues(device.getData());
 				    if(device.get('verif')==null) e.setValues({verif:"yes"});
+				    if(device.get('color')==null) e.setValues({color:'000000'});
 				    //Problème dans le selectfield : si etage est un entier et pas un string ??
 				    //Ce serait un bug (fix dans V. 2.02)
 				    e.setValues({etage: "" + device.get("etage")});
-				    //e.setValues({subcat: "" + device.get("subcategory")});
 				    e.setValues({category: "" + device.get("category")});
 				    e.setValues({subcategory: "" + device.get("subcategory")});
 				    
@@ -281,7 +341,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 					    this.down('#TopItem').hide();
 				    }
 				    if(e.config.data.verif==null) e.config.data.verif="yes";
-				    //e.config.data.subcat=e.config.data.subcategory;
+				    if(e.config.data.color==null) e.config.data.color="000000";
 				    e.setValues(e.config.data);
 				    //Bug avec entier ??
 				    e.setValues({category: "" + e.config.data.category});

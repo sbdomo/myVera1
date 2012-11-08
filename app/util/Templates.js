@@ -19,14 +19,14 @@ Ext.define('myvera.util.Templates', {
 	    '<tpl elseif="category==120"><tpl if="armed==1&&var3==\'off\'"><img src="./resources/images/doff.png" />'+
 	    	'<tpl elseif="armed==0&&var3==\'off\'"><img src="./resources/images/darmoff.png" /><tpl elseif="armed==0&&var3==\'on\'"><img src="./resources/images/darm.png" /></tpl>'+
 	    '</tpl>'+
-	    '<tpl if="category==16&&var1!=null"><div class="texticon">{var1} %</div>'+
-	    '<tpl elseif="category==17&&var1!=null"><div class="texticon">{var1} °C</div>'+
-	    '<tpl elseif="category==18&&var1!=null"><div class="texticon">{var1} %</div>'+
-	    '<tpl elseif="category==21&&watts!=null"><div class="texticon">{watts} W</div>'+
-	    '<tpl elseif="(category==2||category==8)&&level!=null&&watts!=null"><div class="texticon">{level} % <br/>{watts} W</div>'+
-	    '<tpl elseif="(category==2||category==8)&&level!=null"><div class="texticon">{level} %</div>'+
-	    '<tpl elseif="category==3&&watts!=null"><div class="texticon">{watts} W</div>'+
-	    '<tpl elseif="category==120&&var1!=null"><div class="texticon">{var1}</div>'+
+	    '<tpl if="category==16&&var1!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{var1} %</div>'+
+	    '<tpl elseif="category==17&&var1!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{var1} °C</div>'+
+	    '<tpl elseif="category==18&&var1!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{var1} %</div>'+
+	    '<tpl elseif="category==21&&watts!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{watts} W</div>'+
+	    '<tpl elseif="(category==2||category==8)&&level!=null&&watts!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{level} % <br/>{watts} W</div>'+
+	    '<tpl elseif="(category==2||category==8)&&level!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{level} %</div>'+
+	    '<tpl elseif="category==3&&watts!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{watts} W</div>'+
+	    '<tpl elseif="category==120&&var1!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{var1}</div>'+
 	    '</tpl>'+
 	    '</div>',
 	tpllist: '<div class="devtitle">{name}</div>'+
