@@ -179,6 +179,11 @@ Ext.define('myvera.controller.contdevices', {
 	
 	onDevicesStoreLoad: function() {
 		this.devicesync(0,0);
+		var devices = Ext.getStore('devicesStore');
+		if (!devices.getCount()>0) {
+			Ext.getCmp('main').setActiveItem(Ext.getCmp('PanelConfig'));
+			Ext.Msg.alert('Pas de modules', 'Vous devriez ajouter des modules et, si nécessaire, des vues.');
+		}
 	},
 	
 	devicesync: function(newloadtime, newdataversion, nonewsync) {
