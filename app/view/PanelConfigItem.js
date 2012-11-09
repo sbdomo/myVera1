@@ -79,7 +79,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 		},
 		{
 			xtype: 'selectfield',
-			label: 'Etage',
+			label: 'Vue étage ou pièce',
 			name: 'etage',
 			itemId: 'etage',
 			store: 'FloorsStore',
