@@ -277,6 +277,22 @@ Ext.define('myvera.controller.contdevices', {
 							}
 						}
 						
+						for (idrecord in response.scenes) {
+							device = devices.getById("s" + response.scenes[idrecord].id);
+							if (device) {
+								//Pas de synchro des champs active et comment car le sdata le remonte après le lancement d'une scène
+								//mais il ne le réinitialise jamais (alors qu'il le fait pour les devices).
+								//device.set('status', response.scenes[idrecord].active);
+								//device.set('comment', response.scenes[idrecord].comment);
+								if (response.scenes[idrecord].state == null) {
+									device.set('state', 0);
+								} else {
+									device.set('state', response.scenes[idrecord].state);
+								}
+							}
+						}
+						
+						
 						// Maj indicateur nb allumés/éteints
 						var count1 = 0; // nb allumés
 						var count2 = 0; // nb éteints
@@ -369,7 +385,7 @@ Ext.define('myvera.controller.contdevices', {
 		
 		var icontap = false;
 		var cat=record.get('category');
-		if (!Ext.Array.contains([2, 3, 4, 8, 101, 102, 103, 120], cat) && (record.get('sceneon') == null || record.get('sceneoff') == null)) {
+		if (!Ext.Array.contains([2, 3, 4, 8, 101, 102, 103, 120, 1000], cat) && (record.get('sceneon') == null || record.get('sceneoff') == null)) {
 			return;
 		}
 		if (Ext.Array.contains(["datalist", "dataliston", "datalistoff", "listclock"], view.id)) {
@@ -450,7 +466,13 @@ Ext.define('myvera.controller.contdevices', {
 				daction = 'SetTarget';
 				dtargetvalue = 'newTargetValue';
 			}
-
+			
+			if (record.get('category') == 1000) {
+				dservice = "urn:micasaverde-com:serviceId:HomeAutomationGateway1";
+				daction = 'RunScene';
+				newstatus = record.get('id').substring(1);
+			}
+			
 			if (record.get('sceneon') != null && record.get('sceneoff') != null) {
 				dservice = 'urn:micasaverde-com:serviceId:HomeAutomationGateway1';
 				daction = 'RunScene';
@@ -462,6 +484,7 @@ Ext.define('myvera.controller.contdevices', {
 			} else if (Ext.Array.contains([4, 103, 120], record.get('category'))) {
 				return;
 			}
+			
 		}
 
 		//switch status
