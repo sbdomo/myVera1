@@ -13,9 +13,13 @@ Ext.define('myvera.view.PanelImage', {
 			height: 768,
 			listeners:{
 				tap:function(e,t){
-					var itempanel = Ext.getCmp('PanelConfigItem');
-					Ext.getCmp('PanelConfigItem').down('#LeftItem').setValue(t.pageX);
-					Ext.getCmp('PanelConfigItem').down('#TopItem').setValue(t.pageY);
+					typepanel = 'PanelConfigItem';
+					if (this.getParent().config.data.typepanel=='scene') {
+						typepanel = 'PanelConfigScene';
+					}
+					var itempanel = Ext.getCmp(typepanel);
+					Ext.getCmp(typepanel).down('#LeftItem').setValue(t.pageX);
+					Ext.getCmp(typepanel).down('#TopItem').setValue(t.pageY);
 					Ext.getCmp('PanelConfigNavigation').pop();
 				}
 			}

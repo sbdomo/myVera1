@@ -2,7 +2,7 @@ Ext.define('myvera.controller.contconfig', {
 	extend : 'Ext.app.Controller',
 	config: {
 		//stores: ['ConfigDevicesStore', 'devicesStore'],
-		views: ['PanelConfigNavigation', 'PanelConfigItemsMenu', 'PanelConfigItems', 'PanelConfigItem', 'PanelConfigScenes', 'PanelImage', 'carouselitemmove', 'datamove', 'PanelConfigFloorsNavigation', 'PanelConfigFloors', 'PanelConfigFloor'],
+		views: ['PanelConfigNavigation', 'PanelConfigItemsMenu', 'PanelConfigItems', 'PanelConfigItem', 'PanelConfigScenes', , 'PanelConfigScene', 'PanelImage', 'carouselitemmove', 'datamove', 'PanelConfigFloorsNavigation', 'PanelConfigFloors', 'PanelConfigFloor'],
 		refs: {
 			configDevices: 'PanelConfigNavigation',
 			panelConfigItemsOpen: 'PanelConfigItemsMenu [name=openPanelConfigItems]',
@@ -46,7 +46,9 @@ Ext.define('myvera.controller.contconfig', {
 			'PanelConfigFloors': {
 				disclose: 'showDetailFloor'
 			},
-			
+			'PanelConfigScenes': {
+				disclose: 'showDetailScene'
+			},
 			
 			savefloor: {
 				tap: 'onsavefloor'
@@ -354,8 +356,17 @@ Ext.define('myvera.controller.contconfig', {
 			Ext.Msg.alert('Message', "Ne peut-être éditée. (Vue par défaut)");
 		}
 	},
-	      
-	onsavefloor: function() {
+	
+	showDetailScene: function(list, record) {
+		console.info('Record ' + record.get('name'));
+		this.getConfigDevices().push({
+				xtype: 'PanelConfigScene',
+				title: 'Détail d\'une scène',
+				data: record.getData()
+		});
+       },
+       
+       onsavefloor: function() {
 		Ext.Viewport.setMasked({
                      xtype: 'loadmask',
                      message: 'Sauvegarde....'

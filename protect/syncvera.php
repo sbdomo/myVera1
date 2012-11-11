@@ -3,25 +3,48 @@ header('Content-Type: text/html; charset=utf-8');
 
 // Load config
 //include "param.php";
-$ipvera=$_GET["ipvera"];
+
+if(isset($_GET['ipvera'])) $ipvera=$_GET['ipvera'];
+else $ipvera="";
 $vera = 'http://'.$ipvera.':3480';
-$id=$_GET["id"];
+
+if(isset($_GET['id'])) $id=$_GET['id'];
+else $id="";
 
 //read json an vera
 $json="";
 if($id=='sdata') {
-	$loadtime=$_GET["loadtime"];
-	$dataversion=$_GET["dataversion"];
-	$timeout=$_GET["timeout"];
-	$minimumdelay=$_GET["minimumdelay"];
+	
+	if(isset($_GET['loadtime'])) $loadtime=$_GET['loadtime'];
+	else $loadtime="0";
+	
+	if(isset($_GET['dataversion'])) $dataversion=$_GET['dataversion'];
+	else $dataversion="0";
+	
+	if(isset($_GET['timeout'])) $timeout=$_GET['timeout'];
+	else $timeout="";
+	
+	if(isset($_GET['minimumdelay'])) $minimumdelay=$_GET['minimumdelay'];
+	else $minimumdelay="";
+	
 	$url=$vera.'/data_request?id=sdata&loadtime='.$loadtime.'&dataversion='.$dataversion.'&timeout='.$timeout.'&minimumdelay='.$minimumdelay;
 	$json = CurlFileGetContents($url, 80);
 } elseif($id=='lu_action') {
-	$DeviceNum=$_GET["DeviceNum"];
-	$serviceId=$_GET["serviceId"];
-	$action=$_GET["action"];
-	$targetvalue=$_GET["targetvalue"];
-	$newTargetValue=$_GET["newvalue"];
+	
+	if(isset($_GET['DeviceNum'])) $DeviceNum=$_GET['DeviceNum'];
+	else $DeviceNum="";
+	
+	if(isset($_GET['serviceId'])) $serviceId=$_GET['serviceId'];
+	else $serviceId="";
+	
+	if(isset($_GET['action'])) $action=$_GET['action'];
+	else $action="";
+	
+	if(isset($_GET['targetvalue'])) $targetvalue=$_GET['targetvalue'];
+	else $targetvalue="";
+	
+	if(isset($_GET['newvalue'])) $newTargetValue=$_GET['newvalue'];
+	else $newTargetValue="";
 	
 	//id=lu_action&output_format=xml&serviceId=urn:micasaverde-com:serviceId:HomeAutomationGateway1&action=RunScene&SceneNum=
 	    
@@ -32,10 +55,18 @@ if($id=='sdata') {
 	}
 	$json=file_get_contents($url);
 } elseif($id=='vclock') {
-	$DeviceNum=$_GET["DeviceNum"];
-	$alarmtime=$_GET["alarmtime"];
-	$alarmduration=$_GET["alarmduration"];
-	$text1=$_GET["text1"];
+	
+	if(isset($_GET['DeviceNum'])) $DeviceNum=$_GET['DeviceNum'];
+	else $DeviceNum="";
+	
+	if(isset($_GET['alarmtime'])) $alarmtime=$_GET['alarmtime'];
+	else $alarmtime="";
+	
+	if(isset($_GET['alarmduration'])) $alarmduration=$_GET['alarmduration'];
+	else $alarmduration="";
+	
+	if(isset($_GET['text1'])) $text1=$_GET['text1'];
+	else $text1="";
 	
 	$serviceId="urn:upnp-org:serviceId:VClock1";
 	///data_request&id=lu_action&output_format=json&DeviceNum=65&serviceId=urn:upnp-org:serviceId:VClock1&action=SetNewAlarmTime&NewAlarmTime=10:33:00

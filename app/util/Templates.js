@@ -7,16 +7,13 @@ Ext.define('myvera.util.Templates', {
     config: {
 	tplplan: '<tpl if="category==1000">'+
 		 '<div class="scene" style="top: {top}px; left: {left}px;">'+
-		 '<div class="devicon">'+
-		 	'<img class="deviceImage" src="./resources/images/'+
-				'<tpl if="state==-2">jaune<tpl elseif="state==-3">rouge<tpl else>vide</tpl>'+
-				'.png" style="background-image: url(./resources/images/d1000_0.png)" />'+
-		 
-		 '</div><div style="color:white;">{name}</div>'+
-		 
-		 
-		 
-		 '</div>'+
+		 	'<div class="devicon">'+
+		 		'<img class="deviceImage" src="./resources/images/'+
+					'<tpl if="state==-2">jaune<tpl elseif="state==-3">rouge<tpl else>vide</tpl>'+
+					'.png" style="background-image: url(./resources/images/d1000_0.png)" />'+
+			'</div><div class="txtscene">'+
+		 		'<span class="scenemiddle"<tpl if="color!=null> style="color:#{color};"</tpl> >{name}</span><div>'+
+		 	 '</div>'+
 		 '<tpl else>'+
 		 '<div class="x-img x-floating" style="height: 50px; width: 50px; top: {top}px; left: {left}px; z-index: 6; background-image: url(./resources/images/d'+
 	    '<tpl if="icon!=null||category==2||category==3||category==4||category==8||category==101||category==103||category==120">'+
