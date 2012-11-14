@@ -514,8 +514,11 @@ Ext.define('myvera.controller.contdevices', {
 				//output_format: 'json'
 			},
 			success: function(response) {
-				if (Ext.Array.contains([2, 3, 8], record.get('category'))) {
+				var category = record.get('category');
+				if (Ext.Array.contains([2, 3, 8], category)) {
 					record.set('state', -2);
+				} else if (category==1000) {
+					record.set('state', -1);
 				}
 			},
 			failure: function(response) {

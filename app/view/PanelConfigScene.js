@@ -41,6 +41,16 @@ Ext.define('myvera.view.PanelConfigScene', {
 			}
 		},
 		{
+			xtype: 'selectfield',
+			label: 'Affichage dans une vue',
+			name: 'subcategory',
+			itemId: 'subcategory',
+			options: [
+			{text: 'icône et titre', value:0},
+			{text: 'icône seulement',  value: 1}
+			]
+		},
+		{
 			xtype: 'textfield',
 			label: 'Position gauche',
 			itemId: 'LeftItem',
@@ -124,6 +134,7 @@ Ext.define('myvera.view.PanelConfigScene', {
 					device.set("left", formdata.left);
 					device.set("top", formdata.top);
 					device.set("etage", formdata.etage);
+					device.set("subcategory", formdata.subcategory);
 					device.set("color", formdata.color);
 					device.set("icon", formdata.icon);
 					device.set("state", "-3");
@@ -134,6 +145,7 @@ Ext.define('myvera.view.PanelConfigScene', {
 					state: "-3",
 					room: data.room,
 					category: "1000",
+					subcategory: data.subcategory,
 					left: formdata.left,
 					top: formdata.top,
 					etage: formdata.etage,
@@ -175,6 +187,7 @@ Ext.define('myvera.view.PanelConfigScene', {
 				listdevice.set("left", formdata.left);
 				listdevice.set("top", formdata.top);
 				listdevice.set("etage", formdata.etage);
+				listdevice.set("subcategory", formdata.subcategory);
 				listdevice.set("color", formdata.color);
 				listdevice.set("icon", formdata.icon);
 				listdevice.set("state", "0");
@@ -229,9 +242,16 @@ Ext.define('myvera.view.PanelConfigScene', {
 				    e.setValues({id: id});
 				    
 				    if(device.get('color')==null) e.setValues({color:'FFFFFF'});
+				     
 				    //Problème dans le selectfield : si etage est un entier et pas un string ??
 				    //Ce serait un bug (fix dans V. 2.02)
 				    e.setValues({etage: "" + device.get("etage")});
+				    
+				    if(device.get('subcategory')==null) {
+				    	e.setValues({subcategory:'0'});
+				    } else {
+				    	e.setValues({subcategory: "" + device.get("subcategory")});
+				    }
 				    
 				    if(device.get('etage')=="-1") {
 					    this.down('#PlaceItem').hide();
@@ -248,7 +268,10 @@ Ext.define('myvera.view.PanelConfigScene', {
 				    }
 				    
 				    if(e.config.data.color==null) e.config.data.color="FFFFFF";
+				    if(e.config.data.subcategory==null) e.config.data.subcategory=0;
 				    e.setValues(e.config.data);
+				    //Bug avec entier ??
+				    e.setValues({subcategory: "" + e.config.data.subcategory});
 			    }
 		    }
 	}
