@@ -1,4 +1,4 @@
-Ext.define('myvera.model.Configdevices', {
+Ext.define('myvera.model.Configscenes', {
 	extend: 'Ext.data.Model',
 
 	config: {
@@ -15,9 +15,6 @@ Ext.define('myvera.model.Configdevices', {
 			{name: 'etage', type: 'int'},
 			{name:'color', type: 'string'},
 			{name: 'icon', type: 'int'},
-			{name: 'verif', type: 'string'},
-			{name: 'sceneon', type: 'int'},
-			{name: 'sceneoff', type: 'int'},
 		],
 		idProperty: 'id'
 	}

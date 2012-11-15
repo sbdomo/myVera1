@@ -5,20 +5,30 @@ Ext.define('myvera.util.Templates', {
 //		'<tpl if="state==-2"><img src="./img/jaune.png" /><tpl elseif="state==-3"><img src="./img/rouge.png" /></tpl>'
 //		+'</div>',
     config: {
-	tplplan: '<div class="x-img x-floating" style="height: 50px; width: 50px; top: {top}px; left: {left}px; z-index: 6; background-image: url(./resources/images/d'+
-	    '<tpl if="icon!=null||category==2||category==3||category==4||category==8||category==101||category==103||category==120">'+
+	tplplan: '<tpl if="category==1000&&subcategory!=1">'+
+		 '<div class="scene" style="top: {top}px; left: {left}px;">'+
+		 	'<div class="devicon">'+
+		 		'<img class="deviceImage" src="./resources/images/'+
+					'<tpl if="state==-2">jaune<tpl elseif="state==-3">rouge<tpl else>vide</tpl>'+
+					'.png" style="background-image: url(./resources/images/d<tpl if="icon!=null">{icon}<tpl else>1000</tpl>_0.png)" />'+
+			'</div><div class="txtscene">'+
+		 		'<span class="scenemiddle"<tpl if="color!=null> style="color:#{color};"</tpl> >{name}</span><div>'+
+		 	 '</div>'+
+	'<tpl else>'+
+	
+	'<div class="x-img x-floating" style="height: 50px; width: 50px; top: {top}px; left: {left}px; z-index: 6; background-image: url(./resources/images/d'+
+	    '<tpl if="category==2||category==3||category==4||category==8||category==101||category==103||category==120">'+
 	    	'<tpl if="icon!=null">{icon}<tpl elseif="category==4&&subcategory==4">44<tpl else>{category}</tpl>_<tpl if="category==4||category==103||category==120">{tripped}<tpl else>{status}</tpl>'+
-	    '<tpl elseif="category==16">16_0'+
-	    '<tpl elseif="category==17">17_0'+
-	    '<tpl elseif="category==18">18_0'+
-	    '<tpl elseif="category==21">21_0'+
-	    '<tpl elseif="category==102">102_0'+
+	    '<tpl elseif="category==16||category==17||category==18||category==21||category==102||category==1000">'+
+		'<tpl if="icon!=null">{icon}<tpl else>{category}</tpl>_0'+
 	    '<tpl else>0_0</tpl>.png); ">'+
+	    
 	    '<tpl if="state==-2"><img src="./resources/images/jaune.png" /><tpl elseif="state==-3"><img src="./resources/images/rouge.png" />'+
 	    '<tpl elseif="(category==4||category==103)&&armed==0"><img src="./resources/images/darm.png" />'+
 	    '<tpl elseif="category==120"><tpl if="armed==1&&var3==\'off\'"><img src="./resources/images/doff.png" />'+
 	    	'<tpl elseif="armed==0&&var3==\'off\'"><img src="./resources/images/darmoff.png" /><tpl elseif="armed==0&&var3==\'on\'"><img src="./resources/images/darm.png" /></tpl>'+
 	    '</tpl>'+
+	    
 	    '<tpl if="category==16&&var1!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{var1} %</div>'+
 	    '<tpl elseif="category==17&&var1!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{var1} °C</div>'+
 	    '<tpl elseif="category==18&&var1!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{var1} %</div>'+
@@ -28,23 +38,23 @@ Ext.define('myvera.util.Templates', {
 	    '<tpl elseif="category==3&&watts!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{watts} W</div>'+
 	    '<tpl elseif="category==120&&var1!=null"><div class="texticon"<tpl if="color!=null> style="color:#{color};"</tpl> >{var1}</div>'+
 	    '</tpl>'+
-	    '</div>',
+	'</div></tpl>',
 	tpllist: '<div class="devtitle">{name}</div>'+
 		'<div class="devmain">'+
 			'<div class="devicon">'+
 				'<img class="deviceImage" src="./resources/images/'+
 				'<tpl if="state==-2">jaune<tpl elseif="state==-3">rouge<tpl else>vide</tpl>'+
 				'.png" style="background-image: url(./resources/images/l'+
-				'<tpl if="icon!=null||category==2||category==3||category==4||category==8||category==101||category==103||category==120">'+
+				'<tpl if="category==2||category==3||category==4||category==8||category==101||category==103||category==120">'+
 					'<tpl if="icon != null">{icon}<tpl elseif="category==4&&subcategory==4">44'+
 					'<tpl elseif="category==120&&subcategory==1">121<tpl elseif="category==120&&subcategory==2">122'+
-					'<tpl else>{category}</tpl>_<tpl if="category==4||category==103||category==120">{tripped}<tpl else>{status}</tpl>'+
-	   				'<tpl elseif="category==16">16_0'+
-	   				'<tpl elseif="category==17">17_0'+
-	   				'<tpl elseif="category==18">18_0'+
-	   				'<tpl elseif="category==21">21_0'+
-				'<tpl elseif="category==102">102_0'+
-				'<tpl else>0_0</tpl>.png);" />'+
+					'<tpl else>{category}</tpl>'+
+					
+					'_<tpl if="category==4||category==103||category==120">{tripped}<tpl else>{status}</tpl>'+
+				
+				'<tpl elseif="category==16||category==17||category==18||category==21||category==102||category==1000">'+
+					'<tpl if="icon!=null">{icon}<tpl else>{category}</tpl>_0'+
+	   			'<tpl else>0_0</tpl>.png);" />'+
 			'</div>'+
 			'<div class="contenu">'+
 				'<tpl if="category==4&&armed!= null"><div>'+

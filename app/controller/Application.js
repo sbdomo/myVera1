@@ -4,8 +4,8 @@ Ext.define('myvera.controller.Application', {
 
 	config: {
 		views: ['Main','carouselplan','HomePanel', 'PanelConfig', 'PanelConfigGenerale', 'PanelConfigFloorsNavigation', 'PanelConfigNavigation', 'PanelConfigRoomsNavigation', 'datalist','panelinfo','dataliston','datalistoff','listclock','paneloverlay'],
-		stores: ['ConfigDevicesStore', 'devicesStore', 'FloorsStore'],
-		models: ['Veradevices', 'Configdevices', 'modelRooms','CurrentUser', 'Floors'],
+		stores: ['ConfigDevicesStore', 'devicesStore', 'FloorsStore', 'ConfigScenesStore'],
+		models: ['Veradevices', 'Configdevices', 'modelRooms','CurrentUser', 'Floors', 'Configscenes'],
 		
 		panel3d: true,
 		

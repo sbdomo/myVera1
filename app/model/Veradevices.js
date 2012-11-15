@@ -4,7 +4,7 @@ Ext.define('myvera.model.Veradevices', {
 	config: {
 		//give the store some fields
 		fields: [
-			{name: 'id', type: 'int'},
+			{name: 'id', type: 'string'},
 			{name: 'name', type: 'string'},
 			{name: 'status', type: 'int'},
 			{name: 'state', type: 'int'},

@@ -5,7 +5,7 @@ Ext.define('myvera.view.PanelConfigNavigation', {
 	requires: ['myvera.view.PanelConfigItemsMenu'],
 	config: {
 		iconCls : '',
-		title : 'Modules',
+		title : 'Modules et scènes',
 		defaultBackButtonText: 'Retour',
 		items: [
 		{

@@ -2,10 +2,11 @@ Ext.define('myvera.controller.contconfig', {
 	extend : 'Ext.app.Controller',
 	config: {
 		//stores: ['ConfigDevicesStore', 'devicesStore'],
-		views: ['PanelConfigNavigation', 'PanelConfigItemsMenu', 'PanelConfigItems', 'PanelConfigItem', 'PanelImage', 'carouselitemmove', 'datamove', 'PanelConfigFloorsNavigation', 'PanelConfigFloors', 'PanelConfigFloor'],
+		views: ['PanelConfigNavigation', 'PanelConfigItemsMenu', 'PanelConfigItems', 'PanelConfigItem', 'PanelConfigScenes', , 'PanelConfigScene', 'PanelImage', 'carouselitemmove', 'datamove', 'PanelConfigFloorsNavigation', 'PanelConfigFloors', 'PanelConfigFloor'],
 		refs: {
 			configDevices: 'PanelConfigNavigation',
 			panelConfigItemsOpen: 'PanelConfigItemsMenu [name=openPanelConfigItems]',
+			panelConfigScenesOpen: 'PanelConfigItemsMenu [name=openPanelConfigScenes]',
 			panelItemsMoveOpen: 'PanelConfigItemsMenu [name=openPanelMove]',
 			listItemsSave: 'PanelConfigItemsMenu [name=sauver]',
 			
@@ -27,6 +28,10 @@ Ext.define('myvera.controller.contconfig', {
 				tap: 'onPanelConfigItemsOpen'
 			},
 			
+			panelConfigScenesOpen: {
+				tap: 'onPanelConfigScenesOpen'
+			},
+			
 			panelItemsMoveOpen: {
 				tap: 'onPanelItemsMoveOpen'
 			},
@@ -41,7 +46,9 @@ Ext.define('myvera.controller.contconfig', {
 			'PanelConfigFloors': {
 				disclose: 'showDetailFloor'
 			},
-			
+			'PanelConfigScenes': {
+				disclose: 'showDetailScene'
+			},
 			
 			savefloor: {
 				tap: 'onsavefloor'
@@ -86,11 +93,14 @@ Ext.define('myvera.controller.contconfig', {
 				var count = 0;
 				var letexte = "";
 				devices.data.each(function(device) {
+					var cat = device.get('category');
+					//si la catégorie est 1000, c'est une scène, ne pas prendre en compte, il serait possible également de vérifier que l'ID ne commence pas par s
+					if(cat!=1000) {
 					var id = device.get('id');
 					configdevice = ConfigDevicesStore.getById(id);
 					if (configdevice) {
 						configdevice.set('state', '-4');
-						configdevice.set('category', device.get('category'));
+						configdevice.set('category', cat);
 						configdevice.set('subcategory', device.get('subcategory'));
 						var icon_num = device.get('icon');
 						if (icon_num != null) {
@@ -132,6 +142,7 @@ Ext.define('myvera.controller.contconfig', {
 								icon: device.get('icon')
 						});
 					}
+					}
 				});
 			}
 		}
@@ -142,6 +153,103 @@ Ext.define('myvera.controller.contconfig', {
 				xtype: 'PanelConfigItems',
 				title: 'Liste des modules'
 		});
+       },
+	
+	onPanelConfigScenesOpen: function() {
+		var ConfigScenesStore = Ext.getStore('ConfigScenesStore');
+		var contdevices = this.getApplication().getController('contdevices');
+		
+		if (ConfigScenesStore.getCount() <= 0) {
+			ConfigScenesStore.on({
+				load: 'onLoadConfigScenesStore',
+				scope: this
+			});
+			console.log("Load Vera scenes");
+			ConfigScenesStore.getProxy().setExtraParam( 'ipvera',  contdevices.getIpveraCt().getValue());
+			ConfigScenesStore.getProxy().setExtraParam( 'id',  'sdata');
+			var syncheader = "";
+			syncheader = {'Authorization': 'Basic ' + contdevices.loggedUserId};
+			ConfigScenesStore.getProxy().setHeaders(syncheader);
+			ConfigScenesStore.load();
+		} else {
+			this.getConfigDevices().push({
+				xtype: 'PanelConfigScenes',
+				title: 'Liste des scenes'
+			});
+		}
+       },
+       
+       onLoadConfigScenesStore: function() {
+	       var ConfigScenesStore = Ext.getStore('ConfigScenesStore');
+		console.log('Scenes Store:' + ConfigScenesStore.getCount());
+		if (ConfigScenesStore.getCount()>0) {
+			var devices = Ext.getStore('devicesStore');
+			if (devices.getCount()>0) {
+				var count = 0;
+				var letexte = "";
+				devices.data.each(function(device) {
+					var cat = device.get('category');
+					//si la catégorie est 1000, c'est une scène, ne pas prendre en compte, il serait possible également de vérifier que l'ID ne commence pas par s
+					if(cat==1000) {
+					var id = device.get('id').substring(1);
+					configscene = ConfigScenesStore.getById(id);
+					if (configscene) {
+						configscene.set('state', '-4');
+						//configscene.set('category', cat);
+						//configscene.set('subcategory', device.get('subcategory'));
+						var icon_num = device.get('icon');
+						if (icon_num != null) {
+							configscene.set('icon', icon_num);
+						}
+						
+						var name = configscene.get('name');
+						if (device.get('name') != name) {
+							device.set('name', name);
+							device.set('state', "-3");
+							letexte+=" " + name + " renommé.";
+							count++;
+						}
+						var room = configscene.get('room');
+						if (device.get('room') != room) {
+							device.set('room', room);
+							device.set('state', "-3");
+							letexte+=" " + name + " dans pièce n°" + room;
+							count++;
+						}
+						if(count > 0) {
+							var contconfig = myvera.app.getController('myvera.controller.contconfig');
+							contconfig.dirtydevices = 2;
+							contconfig.getListItemsSave().setUi('decline');
+							contconfig.getListItemsSave().setDisabled(false);
+							Ext.Msg.alert('Message', letexte + ' Sauver la liste des modules');
+						}
+						
+					} else {
+						//console.info('error finding ' + device.get('name'));
+						Ext.Msg.alert('Message', device.get('name') + ' non trouvé. Il faudrait le supprimer.');
+						ConfigScenesStore.add({
+								id: device.get('id'),
+								name: device.get('name'),
+								state: "-4",
+								room: device.get('room'),
+								//category: device.get('category'),
+								//subcategory: device.get('subcategory'),
+								icon: device.get('icon')
+						});
+					}
+					}
+				});
+			}
+			
+			this.getConfigDevices().push({
+				xtype: 'PanelConfigScenes',
+				title: 'Liste des scenes'
+			});
+		
+		} else {
+			Ext.Msg.alert('Erreur', 'Pas de scène trouvée;');
+		}
+		
        },
        
        	onPanelItemsMoveOpen: function() {
@@ -248,8 +356,17 @@ Ext.define('myvera.controller.contconfig', {
 			Ext.Msg.alert('Message', "Ne peut-être éditée. (Vue par défaut)");
 		}
 	},
-	      
-	onsavefloor: function() {
+	
+	showDetailScene: function(list, record) {
+		console.info('Record ' + record.get('name'));
+		this.getConfigDevices().push({
+				xtype: 'PanelConfigScene',
+				title: 'Détail d\'une scène',
+				data: record.getData()
+		});
+       },
+       
+       onsavefloor: function() {
 		Ext.Viewport.setMasked({
                      xtype: 'loadmask',
                      message: 'Sauvegarde....'
