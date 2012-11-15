@@ -182,6 +182,27 @@ Ext.define('myvera.view.PanelConfigItem', {
 			name: 'sceneoff'
 		},
 		{
+			xtype: 'textfield',
+			itemId: 'CamuserItem',
+			label: 'User Camera',
+			hidden: true,
+			name: 'camuser'
+		},
+		{
+			xtype: 'passwordfield',
+			itemId: 'CampasswordItem',
+			label: 'Password Camera',
+			hidden: true,
+			name: 'campassword'
+		},
+		{
+			xtype: 'textfield',
+			itemId: 'GraphlinkItem',
+			label: 'Lien vers le graphique',
+			hidden: true,
+			name: 'graphlink'
+		},
+		{
 			xtype: 'button',
 			margin: 5,
 			itemId: 'SaveItem',
@@ -210,6 +231,9 @@ Ext.define('myvera.view.PanelConfigItem', {
 					device.set("verif", formdata.verif);
 					device.set("sceneon", formdata.sceneon);
 					device.set("sceneoff", formdata.sceneoff);
+					device.set("camuser", formdata.camuser);
+					device.set("campassword", formdata.campassword);
+					device.set("graphlink", formdata.graphlink);
 					device.set("state", "-3");
 				} else {
 					devices.add({
@@ -228,7 +252,10 @@ Ext.define('myvera.view.PanelConfigItem', {
 					icon: formdata.icon,
 					verif: formdata.verif,
 					sceneon: formdata.sceneon,
-					sceneoff: formdata.sceneoff
+					sceneoff: formdata.sceneoff,
+					camuser: formdata.camuser,
+					campassword: formdata.campassword,
+					graphlink: formdata.graphlink
 					});
 					device = devices.getById(data.id);
 					device.setDirty();
@@ -273,6 +300,9 @@ Ext.define('myvera.view.PanelConfigItem', {
 				listdevice.set("verif", formdata.verif);
 				listdevice.set("sceneon", formdata.sceneon);
 				listdevice.set("sceneoff", formdata.sceneoff);
+				listdevice.set("camuser", formdata.camuser);
+				listdevice.set("campassword", formdata.campassword);
+				listdevice.set("graphlink", formdata.graphlink);
 				listdevice.set("state", "0");
 				Ext.getCmp('PanelConfigNavigation').pop();
 				myvera.app.getController('myvera.controller.contconfig').alertDirtydevices();
@@ -331,6 +361,13 @@ Ext.define('myvera.view.PanelConfigItem', {
 					    this.down('#PlaceItem').hide();
 					    this.down('#LeftItem').hide();
 					    this.down('#TopItem').hide();
+				    }
+				    if(device.get('category')=="6") {
+					    this.down('#CamuserItem').show();
+					    this.down('#CampasswordItem').show();
+				    }
+				    if(device.get('category')=="16" || device.get('category')=="17" || device.get('category')=="21") {
+					    this.down('#GraphlinkItem').show();
 				    }
 				    this.down('#DeleteItem').show();
 			    } else {

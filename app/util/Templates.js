@@ -19,7 +19,7 @@ Ext.define('myvera.util.Templates', {
 	'<div class="x-img x-floating" style="height: 50px; width: 50px; top: {top}px; left: {left}px; z-index: 6; background-image: url(./resources/images/d'+
 	    '<tpl if="category==2||category==3||category==4||category==8||category==101||category==103||category==120">'+
 	    	'<tpl if="icon!=null">{icon}<tpl elseif="category==4&&subcategory==4">44<tpl else>{category}</tpl>_<tpl if="category==4||category==103||category==120">{tripped}<tpl else>{status}</tpl>'+
-	    '<tpl elseif="category==16||category==17||category==18||category==21||category==102||category==1000">'+
+	    '<tpl elseif="category==6||category==16||category==17||category==18||category==21||category==102||category==1000">'+
 		'<tpl if="icon!=null">{icon}<tpl else>{category}</tpl>_0'+
 	    '<tpl else>0_0</tpl>.png); ">'+
 	    
@@ -52,7 +52,7 @@ Ext.define('myvera.util.Templates', {
 					
 					'_<tpl if="category==4||category==103||category==120">{tripped}<tpl else>{status}</tpl>'+
 				
-				'<tpl elseif="category==16||category==17||category==18||category==21||category==102||category==1000">'+
+				'<tpl elseif="category==6||category==16||category==17||category==18||category==21||category==102||category==1000">'+
 					'<tpl if="icon!=null">{icon}<tpl else>{category}</tpl>_0'+
 	   			'<tpl else>0_0</tpl>.png);" />'+
 			'</div>'+

@@ -25,6 +25,9 @@ foreach ($array_json['devices'] as $device) {
 		'verif' => $device['verif'],
 		'sceneon' => $device['sceneon'],
 		'sceneoff' => $device['sceneoff'],
+		'camuser' => $device['camuser'],
+		'campassword' => $device['campassword'],
+		'graphlink' => $device['graphlink']
 		);
 }
 $result_json='{"devices":'.json_encode($data).'}';

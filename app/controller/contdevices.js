@@ -234,6 +234,10 @@ Ext.define('myvera.controller.contdevices', {
 								
 								var category = device.get('category');
 								switch (category) {
+								case 6: //camera
+									device.set('var1', response.devices[idrecord].ip);
+									device.set('var2', response.devices[idrecord].streaming);
+									break;
 								case 16: //humidity sensor
 									device.set('var1', response.devices[idrecord].humidity);
 									break;
@@ -385,9 +389,10 @@ Ext.define('myvera.controller.contdevices', {
 		
 		var icontap = false;
 		var cat=record.get('category');
-		if (!Ext.Array.contains([2, 3, 4, 8, 101, 102, 103, 120, 1000], cat) && (record.get('sceneon') == null || record.get('sceneoff') == null)) {
+		if (!Ext.Array.contains([2, 3, 4, 6, 8, 16, 17, 21, 101, 102, 103, 120, 1000], cat) && (record.get('sceneon') == null || record.get('sceneoff') == null)) {
 			return;
 		}
+		
 		if (Ext.Array.contains(["datalist", "dataliston", "datalistoff", "listclock"], view.id)) {
 			var tap = Ext.get(event.target);
 			if (tap.hasCls('deviceImage')) {
@@ -436,7 +441,69 @@ Ext.define('myvera.controller.contdevices', {
 		}
 		if (icontap == true) {
 			
-			if (record.get('category') == 120) {
+			//camera
+			if(cat==6&&record.get('sceneon')==null) {
+				//console.log(record);
+				if(record.get('var2')==null){
+					record.data.var2="/videostream.cgi";
+				}
+				if(Ext.getCmp('popup_cam')){
+					Ext.getCmp('popup_cam').setHtml('<img src="http://'+record.get('var1')+record.get('var2')+'?user='+record.get('camuser')+'&pwd='+record.get('campassword')+'" width=640 height=480 border=0 />');
+					Ext.getCmp('popup_cam').show();
+				}else{
+					var popup=new Ext.Panel({
+						modal:true,
+						id: 'popup_cam',
+						hideOnMaskTap: true,
+						width:650,
+						height:490,
+						centered: true,
+						html:'<img src="http://'+record.get('var1')+record.get('var2')+'?user='+record.get('camuser')+'&pwd='+record.get('campassword')+'" width=640 height=480 border=0 />',
+						listeners: {
+							hide: function(panel) {
+								//delete myvera.view.dataplan.lastTapHold;
+								Ext.getCmp('popup_cam').setHtml('');
+							}
+						}
+					});
+					Ext.Viewport.add(popup);
+					popup.show();
+				}
+				return;
+			}
+			
+			
+			//Humidity, Temperature sensor ou Power Meter
+			if(Ext.Array.contains([16, 17, 21], cat)&&record.get('sceneon') == null) {
+				if(record.get('graphlink')!=null){
+					if(Ext.getCmp('popup_cam')){
+						Ext.getCmp('popup_cam').setHtml('<img src="'+record.get('graphlink')+'" width=640 height=480 border=0 />');
+						Ext.getCmp('popup_cam').show();
+					}else{
+						var popup=new Ext.Panel({
+							modal:true,
+							id: 'popup_cam',
+							hideOnMaskTap: true,
+							width:650,
+							height:490,
+							centered: true,
+							html:'<img src="'+record.get('graphlink')+'" width=640 height=480 border=0 />',
+							listeners: {
+								hide: function(panel) {
+									//delete myvera.view.dataplan.lastTapHold;
+									Ext.getCmp('popup_cam').setHtml('');
+								}
+							}
+						});
+						Ext.Viewport.add(popup);
+						popup.show();
+					}
+				}
+				return;
+			}
+			
+			//Vclock
+			if (record.get('category') == 120&&record.get('sceneon') == null) {
 				this.getClockfieldsetCt().setTitle(record.get('name'));
 				this.getClockdeiveidCt().setValue(record.get('id'));
 				dateheure=new Date("February 5, 2001 "+record.get('var1'));
