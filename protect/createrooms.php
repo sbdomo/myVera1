@@ -2,7 +2,7 @@
 header('Content-Type: text/html; charset=utf-8');
 //$success="false";
 //$result="";
-$fichierjson="../resources/config/rooms.json";
+$fichierjson="./config/rooms.json";
 
 $ipvera=$_GET["ipvera"];
 $vera = 'http://'.$ipvera.':3480';

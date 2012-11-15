@@ -1,7 +1,7 @@
 <?php
 $success="false";
 $result="";
-$fichierjson="../resources/config/floors.json";
+$fichierjson="./config/floors.json";
 $cheminImg="../resources/config/img/";
 if ($json = @file_get_contents('php://input'))
 {

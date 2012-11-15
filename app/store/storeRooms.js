@@ -16,7 +16,7 @@ Ext.define('myvera.store.storeRooms', {
 	    ],
 	    proxy: {
 		    type: 'ajax',
-		    url: './resources/config/rooms.json',
+		    url: './protect/config/rooms.json',
 		    reader: {
 			    type: 'json',
 			    rootProperty: 'rooms'

@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 $success="false";
-$fichierjson="../resources/config/rooms.json";
+$fichierjson="./config/rooms.json";
 
 if ($json = @file_get_contents('php://input'))
 {

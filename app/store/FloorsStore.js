@@ -8,7 +8,7 @@ Ext.define('myvera.store.FloorsStore', {
 	    //the local contacts.json file
 	    proxy: {
 		    type: 'ajax',
-		    url: './resources/config/floors.json',
+		    url: './protect/config/floors.json',
 		
 		    reader: {
 			    type: 'json',

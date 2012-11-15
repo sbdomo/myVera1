@@ -2,7 +2,7 @@
 $success="false";
 $result="";
 $id=$_GET["id"];
-$fichierjson="../resources/config/floors.json";
+$fichierjson="./config/floors.json";
 if($id!="" && $json = @file_get_contents($fichierjson)) {
     $json = json_decode($json, true);
     $floors= $json['floors'];

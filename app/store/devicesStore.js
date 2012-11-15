@@ -41,7 +41,7 @@ Ext.define('myvera.store.devicesStore', {
 			type: 'ajax',
 			//url: 'devices.json',
 			api: {
-				read: './resources/config/devices.json',
+				read: './protect/config/devices.json',
 				update: "./protect/savedevices.php"
 			},
 			reader: {

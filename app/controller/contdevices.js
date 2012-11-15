@@ -114,6 +114,11 @@ Ext.define('myvera.controller.contdevices', {
 	},
 	startstore: function() {
 		var storeRooms = Ext.getStore('Rooms');
+		
+		var syncheader = "";
+		syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
+		storeRooms.getProxy().setHeaders(syncheader);
+		
 		storeRooms.on({
 			load: 'onStoreRoomsLoad',
 			scope: this
@@ -126,6 +131,11 @@ Ext.define('myvera.controller.contdevices', {
 		var storeRooms = Ext.getStore('Rooms');
 		if (storeRooms.getCount()>0) {
 			var DevicesStore = Ext.getStore('devicesStore');
+			
+			var syncheader = "";
+			syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
+			DevicesStore.getProxy().setHeaders(syncheader);
+			
 			DevicesStore.on({
 					load: 'onDevicesStoreLoad',
 					scope: this
@@ -837,6 +847,10 @@ Ext.define('myvera.controller.contdevices', {
 	
 	pushplans: function() {
 		var FloorsStore = Ext.getStore('FloorsStore');
+		var syncheader = "";
+		syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
+		FloorsStore.getProxy().setHeaders(syncheader);
+		
 		FloorsStore.load(function(floors) {
 				var items = [];
 				Ext.each(floors, function(floor) {
