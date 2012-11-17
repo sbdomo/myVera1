@@ -7,7 +7,9 @@ Ext.application({
         'Ext.MessageBox',
 	'myvera.util.Templates'
 	],
-
+    
+    profiles: ['Phone', 'Tablet'],
+    
     icon: {
         '57': 'resources/icons/Icon.png',
         '72': 'resources/icons/Icon~ipad.png',
