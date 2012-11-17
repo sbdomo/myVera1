@@ -48,9 +48,16 @@ Ext.define('myvera.view.PanelConfigGenerale', {
 			items: [
 			{
 				xtype: 'togglefield',
-				name: 'isVue',
+				name: 'isVueL',
 				value: 1,
-				label: 'Vue étages et pièces'//,
+				label: 'Vues en mode paysage'//,
+				//labelWidth: '40%'
+			},
+			{
+				xtype: 'togglefield',
+				name: 'isVueP',
+				value: 0,
+				label: 'Vues en mode portrait'//,
 				//labelWidth: '40%'
 			},
 			{

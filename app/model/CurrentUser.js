@@ -6,7 +6,8 @@ Ext.define('myvera.model.CurrentUser', {
 			{name: 'ipvera', type: 'string'},
 			{name: 'name', type: 'string'},
 			{name: 'pass', type: 'string'},
-			{name: 'isVue', type: 'boolean', defaultValue: true},
+			{name: 'isVueL', type: 'boolean', defaultValue: true},
+			{name: 'isVueP', type: 'boolean', defaultValue: true},
 			{name: 'isReveil', type: 'boolean', defaultValue: true}
 		],
 

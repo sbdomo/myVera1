@@ -20,7 +20,8 @@ Ext.define('myvera.controller.contdevices', {
 			passwordCt: 'PanelConfigGenerale [name=pass]',
 			connexionCt: 'PanelConfigGenerale [name=connexion]',
 			ipveraCt: 'PanelConfigGenerale [name=ipvera]',
-			isVue: 'PanelConfigGenerale [name=isVue]',
+			isVueL: 'PanelConfigGenerale [name=isVueL]',
+			isVueP: 'PanelConfigGenerale [name=isVueP]',
 			isReveil: 'PanelConfigGenerale [name=isReveil]',
 			loginBt: 'PanelConfigGenerale [name=loginbutton]',
 			
@@ -45,8 +46,11 @@ Ext.define('myvera.controller.contdevices', {
 				itemtap: 'onDeviceTap'
 			},
 			
-			isVue: {
-				change: 'onIsVueChange'
+			isVueL: {
+				change: 'onIsVueChangeL'
+			},
+			isVueP: {
+				change: 'onIsVueChangeP'
 			},
 			
 			isReveil: {
@@ -76,7 +80,8 @@ Ext.define('myvera.controller.contdevices', {
 				this.getIpveraCt().setValue(this.ipvera);
 				this.loggedUserId = this.base64_encode(cachedLoggedInUser.get('name') + ":" + cachedLoggedInUser.get('pass'));
 				
-				this.getIsVue().setValue(cachedLoggedInUser.get('isVue'));
+				this.getIsVueL().setValue(cachedLoggedInUser.get('isVueL'));
+				this.getIsVueP().setValue(cachedLoggedInUser.get('isVueP'));
 				this.getIsReveil().setValue(cachedLoggedInUser.get('isReveil'));
 				
 				console.info('Auto-Login succeeded.');
@@ -84,10 +89,20 @@ Ext.define('myvera.controller.contdevices', {
 				if(this.getIsReveil().getValue()) Ext.getCmp('main').getTabBar().items.items[2].show();
 				
 				var application = this.getApplication().getController('Application');
-				if(!this.getIsVue().getValue()) {
-					application.setPanel3d(false);
-					Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('datalist'));
-					Ext.getCmp('carouselplan').hide();
+				var orientation= application.getOrientationFix();
+				
+				var typevue = this.getIsVueL().getValue();
+				application.setPanel3dL(typevue);
+				if(typevue==true&&orientation=='landscape') {
+					Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('carouselplan'));
+					//Ext.getCmp('carouselplan').hide();
+				}
+				
+				var typevue = this.getIsVueP().getValue();
+				application.setPanel3dP(typevue);
+				if(typevue==true&&orientation=='portrait') {
+					Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('carouselplan'));
+					//Ext.getCmp('carouselplan').hide();
 				}
 				
 				Ext.getCmp('main').getTabBar().items.items[1].show();
@@ -681,7 +696,8 @@ Ext.define('myvera.controller.contdevices', {
 			var username = this.getUsernameCt().getValue(),
 				password = this.getPasswordCt().getValue(),
 				ipvera = this.getIpveraCt().getValue(),
-				isVue = this.getIsVue().getValue(),
+				isVueL = this.getIsVueL().getValue(),
+				isVueP = this.getIsVueP().getValue(),
 				isReveil = this.getIsReveil().getValue();
 				
 			if(!Ext.isEmpty(password) && !Ext.isEmpty(username) && !Ext.isEmpty(ipvera)) {
@@ -690,7 +706,8 @@ Ext.define('myvera.controller.contdevices', {
 					name: username,
 					pass: password,
 					ipvera: ipvera,
-					isVue: isVue,
+					isVueL: isVueL,
+					isVueP: isVueP,
 					isReveil: isReveil
 				});
 				user.save();
@@ -703,10 +720,18 @@ Ext.define('myvera.controller.contdevices', {
 				if(this.getIsReveil().getValue()) Ext.getCmp('main').getTabBar().items.items[2].show();
 				
 				var application = this.getApplication().getController('Application');
-				if(!this.getIsVue().getValue()) {
-					application.setPanel3d(false);
-					Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('datalist'));
-					Ext.getCmp('carouselplan').hide();
+				var orientation= application.getOrientationFix();
+				
+				application.setPanel3dL(isVueL);
+				if(isVueL==true&&orientation=='landscape') {
+					Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('carouselplan'));
+					//Ext.getCmp('carouselplan').hide();
+				}
+				
+				application.setPanel3dP(isVueP);
+				if(isVueP==true&&orientation=='portrait') {
+					Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('carouselplan'));
+					//Ext.getCmp('carouselplan').hide();
 				}
 				
 				Ext.getCmp('main').getTabBar().items.items[1].show();
@@ -730,26 +755,14 @@ Ext.define('myvera.controller.contdevices', {
 		}
 	},
 	
-	onIsVueChange: function() {
+	onIsVueChangeL: function() {
 		if(this.logged==true) {
 		Ext.ModelMgr.getModel('myvera.model.CurrentUser').load(1, {
 			success: function(user) {
-				var isvue = this.getIsVue().getValue();
-				user.set("isVue", isvue);
+				var isvue = this.getIsVueL().getValue();
+				user.set("isVueL", isvue);
 				user.save();
-				var application = this.getApplication().getController('Application');
-				if (isvue) {
-					application.setPanel3d(true);
-					Ext.getCmp('carouselplan').show();
-					var orientation = Ext.Viewport.getOrientation();
-					if(orientation=="landscape") {
-						Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('carouselplan'));
-					}					
-				} else {
-					application.setPanel3d(false);
-					Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('datalist'));
-					Ext.getCmp('carouselplan').hide();
-				}
+				this.ChangeVue("landscape", isvue);
 				
 			},
 			failure: function() {
@@ -757,6 +770,47 @@ Ext.define('myvera.controller.contdevices', {
 				alert("Erreur !");
 			}
 		}, this);
+		}
+	},
+	
+	onIsVueChangeP: function() {
+		if(this.logged==true) {
+		Ext.ModelMgr.getModel('myvera.model.CurrentUser').load(1, {
+			success: function(user) {
+				var isvue = this.getIsVueP().getValue();
+				user.set("isVueP", isvue);
+				user.save();
+				this.ChangeVue("portrait", isvue);
+				
+			},
+			failure: function() {
+				// this should not happen, nevertheless:
+				alert("Erreur !");
+			}
+		}, this);
+		}
+	},
+	
+	ChangeVue: function(orient, isvue) {
+		var application = this.getApplication().getController('Application');
+		if(orient=="landscape") {
+				application.setPanel3dL(isvue);
+		} else {
+				application.setPanel3dP(isvue);
+		}
+		
+		var orientation= application.getOrientationFix();
+		
+		if (isvue) {
+			//Ext.getCmp('carouselplan').show();
+			if(orientation==orient) {
+				Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('carouselplan'));
+			}
+		} else {
+			if(orientation==orient) {
+				Ext.getCmp('homepanel').setActiveItem(Ext.getCmp('datalist'));
+				//Ext.getCmp('carouselplan').hide();
+			}
 		}
 	},
 	
