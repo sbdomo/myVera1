@@ -127,6 +127,7 @@ Ext.define('myvera.controller.contdevices', {
 		this.getPasswordCt().hide();
 		this.getIpveraCt().hide();
 	},
+	
 	startstore: function() {
 		var storeRooms = Ext.getStore('Rooms');
 		
@@ -255,13 +256,14 @@ Ext.define('myvera.controller.contdevices', {
 									device.set('state', response.devices[idrecord].state);
 								}
 								device.set('tripped', response.devices[idrecord].tripped);
-								device.set('armed', response.devices[idrecord].armed);
+								var armed =response.devices[idrecord].armed;
+								device.set('armed', armed);
 								
 								var category = device.get('category');
 								switch (category) {
 								case 6: //camera
 									device.set('var1', response.devices[idrecord].ip);
-									device.set('var2', response.devices[idrecord].streaming);
+									device.set('var2', response.devices[idrecord].url);
 									break;
 								case 16: //humidity sensor
 									device.set('var1', response.devices[idrecord].humidity);
@@ -468,12 +470,23 @@ Ext.define('myvera.controller.contdevices', {
 			
 			//camera
 			if(cat==6&&record.get('sceneon')==null) {
-				//console.log(record);
+				var me=this;
 				if(record.get('var2')==null){
-					record.data.var2="/videostream.cgi";
+					record.data.var2="/snapshot.cgi";
 				}
+				var RefreshCam = function() {
+					task = Ext.create('Ext.util.DelayedTask', function() {
+						var rand = Math.random();
+						var obj =document.getElementById('cam'+record.get('id'));
+						obj.src = 'http://'+record.get('var1')+record.get('var2')+'?user='+record.get('camuser')+'&pwd='+record.get('campassword')+'&t='+rand;
+						RefreshCam.call(this);
+					}, this);
+					task.delay(700);
+				}
+				
 				if(Ext.getCmp('popup_cam')){
-					Ext.getCmp('popup_cam').setHtml('<img src="http://'+record.get('var1')+record.get('var2')+'?user='+record.get('camuser')+'&pwd='+record.get('campassword')+'" width=640 height=480 border=0 />');
+					Ext.getCmp('popup_cam').setHtml('<img src="http://'+record.get('var1')+record.get('var2')+'?user='+record.get('camuser')+'&pwd='+record.get('campassword')+'" width=640 height=480 border=0 id="cam'+record.get('id')+'" />');
+					RefreshCam();
 					Ext.getCmp('popup_cam').show();
 				}else{
 					var popup=new Ext.Panel({
@@ -483,11 +496,13 @@ Ext.define('myvera.controller.contdevices', {
 						width:650,
 						height:490,
 						centered: true,
-						html:'<img src="http://'+record.get('var1')+record.get('var2')+'?user='+record.get('camuser')+'&pwd='+record.get('campassword')+'" width=640 height=480 border=0 />',
+						html:'<img src="http://'+record.get('var1')+record.get('var2')+'?user='+record.get('camuser')+'&pwd='+record.get('campassword')+'" width=640 height=480 border=0 id="cam'+record.get('id')+'" />',
 						listeners: {
 							hide: function(panel) {
-								//delete myvera.view.dataplan.lastTapHold;
-								Ext.getCmp('popup_cam').setHtml('');
+								task.cancel();
+							},
+							initialize: function(panel){
+								RefreshCam();
 							}
 						}
 					});

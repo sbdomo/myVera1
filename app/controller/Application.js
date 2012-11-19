@@ -1,6 +1,6 @@
 Ext.define('myvera.controller.Application', {
 	extend: 'Ext.app.Controller',
-	requires: ['Ext.DataView'],
+	requires: ['Ext.DataView', 'Ext.util.DelayedTask'],
 
 	config: {
 		views: ['Main','carouselplan','HomePanel', 'PanelConfig', 'PanelConfigGenerale', 'PanelConfigFloorsNavigation', 'PanelConfigNavigation', 'PanelConfigRoomsNavigation', 'datalist','panelinfo','dataliston','datalistoff','listclock','paneloverlay'],
