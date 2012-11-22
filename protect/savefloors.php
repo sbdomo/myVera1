@@ -3,6 +3,7 @@ $success="false";
 $result="";
 $fichierjson="./config/floors.json";
 $cheminImg="../resources/config/img/";
+$floorpathold="";
 if ($json = @file_get_contents('php://input'))
 {
     $json = json_decode($json, true);
@@ -25,11 +26,12 @@ if ($json = @file_get_contents('php://input'))
 		  if($floorkey!="") {
 			  
 			  if($floor['linkimage']!='') {
-				  $floor['path']='vue'.$id.'.jpg';
+				$floorpathold=$floors[$floorkey]['path'];
+				$floor['path']='vue'.$id.time().'.jpg';
+				$floors[$floorkey]['path']=$floor['path'];
 			  }
 			  
 			  $floors[$floorkey]['name']=$floor['name'];
-			  $floors[$floorkey]['path']=$floor['path'];
 			  $floorsencode='{"floors":'.json_encode($floors).'}';
 			  file_put_contents($fichierjson, $floorsencode);
 			  $success="true";
@@ -44,7 +46,7 @@ if ($json = @file_get_contents('php://input'))
 			  if($newid<=$fid) $newid=$fid + 1;
 		  }
 		  if($floor['linkimage']!='') {
-			  $floor['path']='vue'.$newid.'.jpg';
+			  $floor['path']='vue'.$newid.time().'.jpg';
 		  }
 		  
 		  
@@ -62,17 +64,20 @@ if ($json = @file_get_contents('php://input'))
 	    
 	    
 	    if($floor['linkimage']!=''&&$floor['path']!='') {
-		$contents = file_get_contents($floor['linkimage']);
-		$name = $cheminImg.$floor['path'];
-		$fp = fopen($name, 'w');
-		if(fwrite($fp, $contents)) {
-			//$success="true";
+			if($floorpathold!="") {
+				unlink($cheminImg.$floorpathold);
+			}
+			$contents = file_get_contents($floor['linkimage']);
+			$name = $cheminImg.$floor['path'];
+			$fp = fopen($name, 'w');
+			if(fwrite($fp, $contents)) {
+				//$success="true";
 			
-		} else {
-			$success="false";
-			$result="Erreur image";
-		}
-		fclose($fp);
+			} else {
+				$success="false";
+				$result="Erreur image";
+			}
+			fclose($fp);
 	    }
 	    
     } else {

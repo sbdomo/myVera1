@@ -2,7 +2,6 @@ Ext.define('myvera.view.PanelConfigFloor', {
 	extend: 'Ext.form.Panel',
 	xtype: 'PanelConfigFloor',
 	requires: [
-        //'Ext.Img',
         'Ext.field.Text'
     ],
     
@@ -57,20 +56,12 @@ Ext.define('myvera.view.PanelConfigFloor', {
 			hidden: true,
 			name: 'deletefloor',
 			itemId: 'deletefloor'
-		}//,
-//		{
-//			xtype: 'image',
-//			itemId: 'imgfloor',
-//			mode: 'element',
-//			width: 450
-//		}
-		],
+		}		],
 		listeners:{
 			updatedata:function(e,d){
 				var label = e.down('#titlePanelConfigFloor');
 				var html = d.name + ' - ID: ' + d.id;
 				label.setHtml(html);
-				//e.down('#imgfloor').setSrc('./resources/config/img/'+ d.path);
 				e.down('#deletefloor').show();
 				e.down('#savefloor').setIconCls('refresh');
 				e.down('#savefloor').setText('Sauver');
