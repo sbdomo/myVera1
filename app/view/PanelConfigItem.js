@@ -9,7 +9,7 @@ Ext.define('myvera.view.PanelConfigItem', {
 	config: {
 		name:'PanelConfigItem',
 		scrollable: 'vertical',
-		//tpl: ['<img src="resources/images/l<tpl if="icon!=null">{icon}<tpl else>{category}</tpl>_0.png" /> ID:{id}<br/>Nom: {name}'],
+		//tpl: ['<img src="resources/images/l<tpl if="icon!=null&#icon!=\'\'">{icon}<tpl else>{category}</tpl>_0.png" /> ID:{id}<br/>Nom: {name}'],
 		items: [
 		{
 			html:"",
@@ -68,6 +68,10 @@ Ext.define('myvera.view.PanelConfigItem', {
 					} else {
 						subcat.hide();
 					}
+					this.getParent().config.data.category = value;
+					var label = this.getParent().down('#titlePanelConfigItem');
+					var html = label.getTpl().apply(this.getParent().config.data);
+					label.setHtml(html);
 				}
 			}
 		},
@@ -169,7 +173,8 @@ Ext.define('myvera.view.PanelConfigItem', {
 		{
 			xtype: 'textfield',
 			label: 'Num. icône (facultatif)',
-			name: 'icon'
+			name: 'icon',
+			itemId: 'icon'
 		},
 		{
 			xtype: 'textfield',
@@ -384,6 +389,22 @@ Ext.define('myvera.view.PanelConfigItem', {
 				    e.setValues({category: "" + e.config.data.category});
 				    e.setValues({subcategory: "" + e.config.data.subcategory});
 			    }
+			    //Pour changer l'icone du titre quand icon est modifié
+			    this.down('#icon').addListener('change', function(me,newvalue,oldvalue, opt){
+					if(newvalue!="") this.getParent().config.data.icon = newvalue;
+					else this.getParent().config.data.icon = null;
+					var label = this.getParent().down('#titlePanelConfigItem');
+					var html = label.getTpl().apply(this.getParent().config.data);
+					label.setHtml(html);
+				});
+				
+				//Pour changer l'icone du titre quand subcategory est modifié
+			    this.down('#subcategory').addListener('change', function(me,newvalue,oldvalue, opt){
+					this.getParent().config.data.subcategory = newvalue;
+					var label = this.getParent().down('#titlePanelConfigItem');
+					var html = label.getTpl().apply(this.getParent().config.data);
+					label.setHtml(html);
+				});
 		    }
 	}
 	}

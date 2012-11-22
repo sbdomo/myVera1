@@ -393,6 +393,9 @@ Ext.define('myvera.controller.contconfig', {
 				if (response) {
 					Ext.Viewport.setMasked(false);
 					if (response.success=="true") {
+						//var rand = Math.random();
+						//form.down('#imgfloor').setSrc('./resources/config/img/' + formdata.path);
+						// + '?rd=' + rand
 						// process server response here
 						contdevices.pushplans();
 						Ext.getCmp('PanelConfigFloorsNavigation').pop();

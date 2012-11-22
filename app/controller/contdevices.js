@@ -8,6 +8,7 @@ Ext.define('myvera.controller.contdevices', {
 		loggedUserId: null,
 		logged: null,
 		ipvera: null,
+		
 		refs: {
 			plan: 'dataplan',
 			liste1: 'datalist',
@@ -69,6 +70,8 @@ Ext.define('myvera.controller.contdevices', {
 	},
 
 	launch: function() {
+		//Utilisé pour charger devicesStore après FloorsStore s'il n'est pas encore chargé.
+		this.storeloaded=false;
 		Ext.ModelMgr.getModel('myvera.model.CurrentUser').load(1, {
 			scope: this,
 			success: function(cachedLoggedInUser) {
@@ -159,7 +162,8 @@ Ext.define('myvera.controller.contdevices', {
 			
 			Ext.getStore('devicesStore').getProxy().setExtraParam( 'ipvera',  this.getIpveraCt().getValue());
 			
-			DevicesStore.load();
+			//Bug avec Sencha Touch 2.1, load après le load de FloorsStore dans pushplans
+			//DevicesStore.load();
 			this.pushplans();
 		} else {
 			Ext.Msg.confirm('Erreur', 'Liste des pièces vide. La créer?', function(confirmed) {
@@ -919,8 +923,10 @@ Ext.define('myvera.controller.contdevices', {
 		var syncheader = "";
 		syncheader = {'Authorization': 'Basic ' + this.loggedUserId};
 		FloorsStore.getProxy().setHeaders(syncheader);
-		
+		var contdevives=this;
+		console.log(contdevives.storeloaded);
 		FloorsStore.load(function(floors) {
+				console.log("loading floors");
 				var items = [];
 				Ext.each(floors, function(floor) {
 					if(floor.data.id!=-1) {
@@ -933,6 +939,12 @@ Ext.define('myvera.controller.contdevices', {
 				});
 				Ext.getCmp('carouselplan').setItems(items);
 				Ext.getCmp('carouselplan').setActiveItem(0);
+				if(contdevives.storeloaded==false) {
+					var DevicesStore = Ext.getStore('devicesStore');
+					DevicesStore.load();
+					contdevives.storeloaded=true;
+				}
+				console.log(contdevives.storeloaded);
 		});
 	},
 	

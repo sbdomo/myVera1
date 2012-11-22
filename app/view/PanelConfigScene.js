@@ -109,7 +109,8 @@ Ext.define('myvera.view.PanelConfigScene', {
 		{
 			xtype: 'textfield',
 			label: 'Num. icône (facultatif)',
-			name: 'icon'
+			name: 'icon',
+			itemId: 'icon'
 		},
 		{
 			xtype: 'button',
@@ -273,6 +274,15 @@ Ext.define('myvera.view.PanelConfigScene', {
 				    //Bug avec entier ??
 				    e.setValues({subcategory: "" + e.config.data.subcategory});
 			    }
+			    
+			    //Pour changer l'icone du titre quand icon est modifié
+			    this.down('#icon').addListener('change', function(me,newvalue,oldvalue, opt){
+					if(newvalue!="") this.getParent().config.data.icon = newvalue;
+					else this.getParent().config.data.icon = null;
+					var label = this.getParent().down('#titlePanelConfigScene');
+					var html = label.getTpl().apply(this.getParent().config.data);
+					label.setHtml(html);
+			    });
 		    }
 	}
 	}

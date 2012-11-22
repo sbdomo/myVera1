@@ -2,7 +2,7 @@ Ext.define('myvera.view.PanelConfigFloor', {
 	extend: 'Ext.form.Panel',
 	xtype: 'PanelConfigFloor',
 	requires: [
-        'Ext.Img',
+        //'Ext.Img',
         'Ext.field.Text'
     ],
     
@@ -19,18 +19,21 @@ Ext.define('myvera.view.PanelConfigFloor', {
 		{
 			xtype: 'textfield',
 			label: 'Nom',
-			id: 'name',
+			//id: 'name',
+			itemId: 'name',
 			name: 'name'
 		},
 		{
 			xtype: 'textfield',
 			label: 'Url de l\'image',
-			id: 'linkimage',
+			//id: 'linkimage',
+			itemId: 'linkimage',
 			name: 'linkimage'
 		},{
 			xtype: 'textfield',
 			label: 'Image',
-			id: 'path',
+			//id: 'path',
+			itemId: 'path',
 			disabled: true,
 			name: 'path'
 		},
@@ -54,18 +57,27 @@ Ext.define('myvera.view.PanelConfigFloor', {
 			hidden: true,
 			name: 'deletefloor',
 			itemId: 'deletefloor'
-		}
+		}//,
+//		{
+//			xtype: 'image',
+//			itemId: 'imgfloor',
+//			mode: 'element',
+//			width: 450
+//		}
 		],
 		listeners:{
 			updatedata:function(e,d){
 				var label = e.down('#titlePanelConfigFloor');
 				var html = d.name + ' - ID: ' + d.id;
 				label.setHtml(html);
+				//e.down('#imgfloor').setSrc('./resources/config/img/'+ d.path);
 				e.down('#deletefloor').show();
 				e.down('#savefloor').setIconCls('refresh');
 				e.down('#savefloor').setText('Sauver');
-				Ext.getCmp('name').setValue(d.name);
-				Ext.getCmp('path').setValue(d.path);
+				//Ext.getCmp('name').setValue(d.name);
+				//Ext.getCmp('path').setValue(d.path);
+				e.down('#name').setValue(d.name);
+				e.down('#path').setValue(d.path);
 			}
 		}
 		
