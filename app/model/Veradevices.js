@@ -25,6 +25,8 @@ Ext.define('myvera.model.Veradevices', {
 			{name: 'camuser', type: 'string'},
 			{name: 'campassword', type: 'string'},
 			{name: 'graphlink', type: 'string'},
+			{name: 'comment', type: 'string'},
+			{name: 'armed', type: 'int'},
 			{name: 'var1', type: 'string'},
 			{name: 'var2', type: 'string'},
 			{name: 'var3', type: 'string'},
